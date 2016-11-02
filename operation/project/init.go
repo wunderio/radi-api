@@ -13,7 +13,7 @@ type ProjectInitOperation struct{}
 
 // Id the operation
 func (create *ProjectInitOperation) Id() string {
-	return OPERATION_ID_PROJECT_CREATE
+	return OPERATION_ID_PROJECT_INIT
 }
 
 // Label the operation
