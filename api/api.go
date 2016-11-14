@@ -32,8 +32,6 @@ import (
 
 // API is an instance of the API library that can return Operations
 type API interface {
-	// Validate returns a boolean value for if an API instance considers itself to be properly set up
-	Validate() bool
 	// Operations returns a list of executable operations
 	Operations() operation.Operations
 }
