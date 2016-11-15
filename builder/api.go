@@ -36,6 +36,12 @@ type Implementations struct {
 func (implementations *Implementations) Order() []string {
 	return implementations.implementations
 }
+// Provides the implementations as an ordered string list
+func (implementations *Implementations) Merge(merge Implementations) {
+	for _, add := range merge.Order() {
+		implementations.implementations = append(implementations.implementations, add)
+	}
+}
 
 /**
  * The BuildAPI
