@@ -1,9 +1,5 @@
 package document
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * List all topics or subtopics using the Documentation Handler
  */
@@ -29,7 +25,4 @@ func (list *BaseDocumentTopicListOperation) Description() string {
 // Is this an internal API operation
 func (list *BaseDocumentTopicListOperation) Internal() bool {
 	return false
-}
-func (list *BaseDocumentTopicListOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

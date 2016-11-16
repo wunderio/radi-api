@@ -1,9 +1,5 @@
 package command
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * An operation for listing commands that are available
  * in the app
@@ -34,7 +30,4 @@ func (list *BaseCommandListOperation) Description() string {
 // Is this an internal API operation
 func (list *BaseCommandListOperation) Internal() bool {
 	return true
-}
-func (list *BaseCommandListOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

@@ -17,6 +17,14 @@ func (base *BaseResult) Set(success bool, errors []error) {
 		base.errors = append(base.errors, errors...)
 	}
 }
+
+// Did the operation succeed
 func (base *BaseResult) Success() (bool, []error) {
 	return base.success, base.errors
+}
+
+// Merge a result into this result
+func (base *BaseResult) Merge(merge Result) {
+	success, errs := merge.Success()
+	base.Set(success, errs)
 }

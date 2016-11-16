@@ -1,9 +1,5 @@
 package security
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * User operations return information about the currently
  * authenticated user
@@ -30,7 +26,4 @@ func (authenticate *BaseSecurityUserOperation) Description() string {
 // Is this an internal API operation
 func (authenticate *BaseSecurityUserOperation) Internal() bool {
 	return false
-}
-func (authenticate *BaseSecurityUserOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

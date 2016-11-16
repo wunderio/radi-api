@@ -1,9 +1,5 @@
 package orchestrate
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * Orchestration DOWN - like docker-compose down
  *
@@ -36,7 +32,4 @@ func (down *BaseOrchestrationDownOperation) Description() string {
 // Is this an internal API operation
 func (down *BaseOrchestrationDownOperation) Internal() bool {
 	return false
-}
-func (down *BaseOrchestrationDownOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

@@ -1,9 +1,5 @@
 package document
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * Retrieve the documentation for a single Documentation topic,
  * using the Documentation handler
@@ -30,7 +26,4 @@ func (get *BaseDocumentTopicGetOperation) Description() string {
 // Is this an internal API operation
 func (get *BaseDocumentTopicGetOperation) Internal() bool {
 	return false
-}
-func (get *BaseDocumentTopicGetOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

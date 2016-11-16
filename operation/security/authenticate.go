@@ -1,9 +1,5 @@
 package security
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * Operations for authenticating access to the API
  * which can come in a few forms.  This files holds
@@ -32,7 +28,4 @@ func (authenticate *BaseSecurityAuthenticateOperation) Description() string {
 // Is this an internal API operation
 func (authenticate *BaseSecurityAuthenticateOperation) Internal() bool {
 	return false
-}
-func (authenticate *BaseSecurityAuthenticateOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

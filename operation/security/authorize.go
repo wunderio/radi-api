@@ -1,9 +1,5 @@
 package security
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * Authorize operations should be used to question whether or not
  * the authorized user should be given access to other operations
@@ -33,7 +29,4 @@ func (authorize *BaseSecurityAuthorizeOperation) Description() string {
 // Is this an internal API operation
 func (authorize *BaseSecurityAuthorizeOperation) Internal() bool {
 	return false
-}
-func (authorize *BaseSecurityAuthorizeOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

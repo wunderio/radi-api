@@ -1,9 +1,5 @@
 package command
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 const (
 	OPERATION_ID_COMMAND_EXEC = "command.exec"
 )
@@ -33,7 +29,4 @@ func (exec *BaseCommandExecOperation) Description() string {
 // Is this an internal API operation
 func (exec *BaseCommandExecOperation) Internal() bool {
 	return true
-}
-func (exec *BaseCommandExecOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }

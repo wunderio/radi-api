@@ -1,9 +1,5 @@
 package command
 
-import (
-	"github.com/james-nesbitt/kraut-api/operation"
-)
-
 /**
  * A command operation to retrieve a command object
  */
@@ -37,7 +33,4 @@ func (get *BaseCommandGetOperation) Description() string {
 // Is this an internal API operation
 func (get *BaseCommandGetOperation) Internal() bool {
 	return true
-}
-func (get *BaseCommandGetOperation) Properties() *operation.Properties {
-	return &operation.Properties{}
 }
