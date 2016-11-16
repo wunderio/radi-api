@@ -40,7 +40,6 @@ func (createSource *ProjectCreateSourceProperty) Internal() bool {
 	return false
 }
 
-
 // Property for the create source
 type ProjectInitDemoModeProperty struct {
 	operation.BooleanProperty

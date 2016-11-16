@@ -24,8 +24,9 @@ type Handler interface {
 // An ordered collection of Handler objects
 type Handlers struct {
 	handlers map[string]Handler
-	order []string
+	order    []string
 }
+
 // safe intitializer
 func (handlers *Handlers) safe() {
 	if handlers.order == nil {
@@ -33,6 +34,7 @@ func (handlers *Handlers) safe() {
 		handlers.order = []string{}
 	}
 }
+
 // Add a handler
 func (handlers *Handlers) Add(hand Handler) error {
 	key := hand.Id()
@@ -43,6 +45,7 @@ func (handlers *Handlers) Add(hand Handler) error {
 	handlers.handlers[key] = hand
 	return nil
 }
+
 // Get a single handler
 func (handlers *Handlers) Get(key string) (Handler, error) {
 	handlers.safe()
@@ -52,6 +55,7 @@ func (handlers *Handlers) Get(key string) (Handler, error) {
 		return hand, errors.New("No such handler found")
 	}
 }
+
 // Get the handler ordered keys
 func (handlers *Handlers) Order() []string {
 	handlers.safe()
