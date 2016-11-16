@@ -130,11 +130,13 @@ func (property *BooleanProperty) Type() string {
 }
 
 func (property *BooleanProperty) Get() interface{} {
+	log.WithFields(log.Fields{"value": property.value}).Info("Getting boolean")
 	return interface{}(property.value)
 }
 func (property *BooleanProperty) Set(value interface{}) bool {
 	if converted, ok := value.(bool); ok {
 		property.value = converted
+		log.WithFields(log.Fields{"new": value, "value": property.value}).Info("Setting boolean")
 		return true
 	} else {
 		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected bool")

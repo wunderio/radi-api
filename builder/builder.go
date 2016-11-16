@@ -4,11 +4,11 @@ import (
 	"errors"
 
 	"github.com/james-nesbitt/kraut-api/api"
-	"github.com/james-nesbitt/kraut-api/operation"	
+	"github.com/james-nesbitt/kraut-api/operation"
 )
 
 /**
- * Builders are essentially meta handlers, which can 
+ * Builders are essentially meta handlers, which can
  * produce handlers from simpler settings.
  *
  * Builders often need a back reference to the api
@@ -28,12 +28,12 @@ type Builder interface {
 	Operations() *operation.Operations
 }
 
-
 // An ordered collection of Builder objects
 type Builders struct {
 	builders map[string]Builder
-	order []string
+	order    []string
 }
+
 // safe intitializer
 func (builders *Builders) safe() {
 	if builders.order == nil {
@@ -41,6 +41,7 @@ func (builders *Builders) safe() {
 		builders.order = []string{}
 	}
 }
+
 // Add a builder
 func (builders *Builders) Add(key string, builder Builder) error {
 	builders.safe()
@@ -50,6 +51,7 @@ func (builders *Builders) Add(key string, builder Builder) error {
 	builders.builders[key] = builder
 	return nil
 }
+
 // Get a single builder
 func (builders *Builders) Get(key string) (Builder, error) {
 	builders.safe()
@@ -59,6 +61,7 @@ func (builders *Builders) Get(key string) (Builder, error) {
 		return builder, errors.New("No such builder found")
 	}
 }
+
 // Get the builder ordered keys
 func (builders *Builders) Order() []string {
 	builders.safe()

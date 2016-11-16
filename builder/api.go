@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/james-nesbitt/kraut-api/api"
-	"github.com/james-nesbitt/kraut-api/operation"	
+	"github.com/james-nesbitt/kraut-api/operation"
 )
 
 /**
@@ -16,7 +16,7 @@ import (
 
 /**
  * Implementations are string identifiers or gorups of
- * operations, which will likely always relate to 
+ * operations, which will likely always relate to
  * the api/operations (but not strictly necessary)
  */
 
@@ -36,6 +36,7 @@ type Implementations struct {
 func (implementations *Implementations) Order() []string {
 	return implementations.implementations
 }
+
 // Provides the implementations as an ordered string list
 func (implementations *Implementations) Merge(merge Implementations) {
 	for _, add := range merge.Order() {
@@ -47,30 +48,30 @@ func (implementations *Implementations) Merge(merge Implementations) {
  * The BuildAPI
  */
 
-// BuilderAPI provides an API that is picks handlers and operations based on configuration
+// BuilderAPI provides an API that is picks builders based on configuration
 type BuilderAPI struct {
-	availableBuilders Builders
+	builders  Builders
 	activated []string
 }
 
-// Make a new handler available in the API (available to be activated)
-func (builder *BuilderAPI) AddBuilder(hand Builder) {
-	builder.availableBuilders.Add(hand.Id(), hand)
+// Make a new Builder available in the API (available to be activated)
+func (builderApi *BuilderAPI) AddBuilder(builder Builder) {
+	builderApi.builders.Add(builder.Id(), builder)
 }
-func (builder *BuilderAPI) ActivateBuilder(id string, implementations Implementations, settings SettingsProvider) error {
-	if hand, err := builder.availableBuilders.Get(id); err == nil {
-		hand.SetAPI(api.API(builder))
+func (builderApi *BuilderAPI) ActivateBuilder(id string, implementations Implementations, settings SettingsProvider) error {
+	if builder, err := builderApi.builders.Get(id); err == nil {
+		builder.SetAPI(api.API(builderApi))
 
-		if err := hand.Activate(implementations, settings); err == nil {
+		if err := builder.Activate(implementations, settings); err == nil {
 			found := false
-			for _, activated := range builder.activated {
+			for _, activated := range builderApi.activated {
 				if activated == id {
 					found = true
 					break
 				}
 			}
 			if !found {
-				builder.activated = append(builder.activated, id)
+				builderApi.activated = append(builderApi.activated, id)
 			}
 			return nil
 		} else {
@@ -82,11 +83,11 @@ func (builder *BuilderAPI) ActivateBuilder(id string, implementations Implementa
 }
 
 // Return a list of operations for the API from all of the activated Builders
-func (builder *BuilderAPI) Operations() operation.Operations {
+func (builderApi *BuilderAPI) Operations() operation.Operations {
 	ops := operation.Operations{}
-	for _, id := range builder.activated {
-		hand, _ := builder.availableBuilders.Get(id)
-		ops.Merge(hand.Operations())
+	for _, id := range builderApi.activated {
+		builder, _ := builderApi.builders.Get(id)
+		ops.Merge(builder.Operations())
 	}
 	return ops
 }

@@ -4,7 +4,6 @@ import (
 	"errors"
 )
 
-
 // An abstracted settings provider that can unmarshal to a target
 type SettingsProvider interface {
 	AssignSettings(target interface{}) error
@@ -19,24 +18,25 @@ type SettingsProvider interface {
 // Constructor for BuildSetting
 func New_BuildSetting(buildType string, implementations Implementations, settingsProvider SettingsProvider) *BuildSetting {
 	return &BuildSetting{
-		Type: buildType,
-		Implementations: implementations,
+		Type:             buildType,
+		Implementations:  implementations,
 		SettingsProvider: settingsProvider,
 	}
 }
 
 // A single Builder instruction set.
 type BuildSetting struct {
-	Type string
-	Implementations Implementations
-	SettingsProvider SettingsProvider
+	Type             string           // which builder should be used
+	Implementations  Implementations  // which implementations the builder should activate (strings that the builder will understand)
+	SettingsProvider SettingsProvider // this will provide abstract settings that the builder should understand
 }
 
 // An ordered list of BuildSettings
 type BuildSettings struct {
 	builderSettings map[string]BuildSetting
-	order []string
+	order           []string
 }
+
 // safe intitializer
 func (builderSettings *BuildSettings) safe() {
 	if builderSettings.order == nil {
@@ -44,6 +44,7 @@ func (builderSettings *BuildSettings) safe() {
 		builderSettings.order = []string{}
 	}
 }
+
 // Add a builder
 func (builderSettings *BuildSettings) Set(key string, builderSetting BuildSetting) error {
 	builderSettings.safe()
@@ -53,6 +54,7 @@ func (builderSettings *BuildSettings) Set(key string, builderSetting BuildSettin
 	builderSettings.builderSettings[key] = builderSetting
 	return nil
 }
+
 // Get a single builder
 func (builderSettings *BuildSettings) Get(key string) (BuildSetting, error) {
 	builderSettings.safe()
@@ -62,12 +64,14 @@ func (builderSettings *BuildSettings) Get(key string) (BuildSetting, error) {
 		return builderSetting, errors.New("No such builderler found")
 	}
 }
+
 // Get the builder ordered keys
 func (builderSettings *BuildSettings) Order() []string {
 	builderSettings.safe()
 	return builderSettings.order
 }
+
 // Does this list have any items
 func (builderSettings *BuildSettings) Empty() bool {
-	return (builderSettings.builderSettings == nil) || (len(builderSettings.builderSettings)==0)
+	return (builderSettings.builderSettings == nil) || (len(builderSettings.builderSettings) == 0)
 }
