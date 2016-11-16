@@ -4,6 +4,12 @@ import (
 	"errors"
 )
 
+
+// An abstracted settings provider that can unmarshal to a target
+type SettingsProvider interface {
+	AssignSettings(target interface{}) error
+}
+
 /**
  * The following 2 structs are used to keep track of settings
  * as a string map, but where each value knows from what config
@@ -11,11 +17,11 @@ import (
  */
 
 // Constructor for BuildSetting
-func New_BuildSetting(buildType string, implementations Implementations, settings interface{}) *BuildSetting {
+func New_BuildSetting(buildType string, implementations Implementations, settingsProvider SettingsProvider) *BuildSetting {
 	return &BuildSetting{
 		Type: buildType,
 		Implementations: implementations,
-		Settings: settings,
+		SettingsProvider: settingsProvider,
 	}
 }
 
@@ -23,7 +29,7 @@ func New_BuildSetting(buildType string, implementations Implementations, setting
 type BuildSetting struct {
 	Type string
 	Implementations Implementations
-	Settings interface{}
+	SettingsProvider SettingsProvider
 }
 
 // An ordered list of BuildSettings
