@@ -21,7 +21,7 @@ type Builder interface {
 	// Set a API for this Handler
 	SetAPI(parent api.API)
 	// Initialize and activate the Handler
-	Activate(implementations Implementations, settings interface{}) error
+	Activate(Implementations, SettingsProvider) error
 	// Rturn a string identifier for the Handler (not functionally needed yet)
 	Id() string
 	// Return a list of Operations from the Handler

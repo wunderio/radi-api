@@ -57,7 +57,7 @@ type BuilderAPI struct {
 func (builder *BuilderAPI) AddBuilder(hand Builder) {
 	builder.availableBuilders.Add(hand.Id(), hand)
 }
-func (builder *BuilderAPI) ActivateBuilder(id string, implementations Implementations, settings interface{}) error {
+func (builder *BuilderAPI) ActivateBuilder(id string, implementations Implementations, settings SettingsProvider) error {
 	if hand, err := builder.availableBuilders.Get(id); err == nil {
 		hand.SetAPI(api.API(builder))
 
