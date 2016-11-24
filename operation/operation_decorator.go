@@ -101,7 +101,7 @@ func (operation *DecoratedBooleanPropertyBasedOperation) Exec() Result {
 		if boolProp, found := props.Get(operation.property); !found {
 			result.Set(false, []error{errors.New("Decorator operation did not have the targeted property")})
 		} else if boolProp.Type() != "bool" {
-			result.Set(false, []error{errors.New("Decorator operation targeted property was not a boolean")})
+			result.Set(false, []error{errors.New("Decorator operation targeted property was not a boolean [" + operation.property + ":" + boolProp.Type() + "]")})
 		} else if !boolProp.Get().(bool) {
 			result.Set(false, []error{})
 		}

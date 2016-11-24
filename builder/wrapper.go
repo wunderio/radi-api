@@ -8,7 +8,7 @@ package builder
  */
 type BuilderConfigWrapper interface {
 	DefaultScope() string
-	Get(key string) (BuildSetting, bool)
-	Set(key string, values BuildSetting) bool
+	Get(key string) (BuildComponent, bool)
+	Set(key string, values BuildComponent) bool
 	List() []string
 }

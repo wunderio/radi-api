@@ -76,7 +76,11 @@ func (wrapper *SimpleCommandWrapper) List(parent string) ([]string, error) {
 	}
 
 	if success, errs = op.Exec().Success(); !success {
-		return result, errs[0]
+		if len(errs) > 0 {
+			return result, errs[0]
+		} else {
+			return result, errors.New("Unknown error occured listing commands")
+		}
 	}
 
 	result = keysProp.Get().([]string)
