@@ -1,5 +1,9 @@
 package security
 
+const (
+	OPERATION_KEY_SECURITY_AUTHORIZE_OPERATION = "security.authorize"
+)
+
 /**
  * Authorize operations should be used to question whether or not
  * the authorized user should be given access to other operations
@@ -13,7 +17,7 @@ type BaseSecurityAuthorizeOperation struct{}
 
 // Id the operation
 func (authorize *BaseSecurityAuthorizeOperation) Id() string {
-	return "security.authorize"
+	return OPERATION_KEY_SECURITY_AUTHORIZE_OPERATION
 }
 
 // Label the operation

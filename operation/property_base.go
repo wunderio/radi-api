@@ -224,3 +224,27 @@ func (property *ContextProperty) Set(value interface{}) bool {
 		return false
 	}
 }
+
+// A base Property that provides an operation
+type OperationProperty struct {
+	value Operation
+}
+
+// Give an idea of what type of value the property consumes
+func (property *OperationProperty) Type() string {
+	return "github.com/james-nesbitt/kraut-api/operation.Operation"
+}
+
+// Retrieve the context, or retrieve a Background context by default
+func (property *OperationProperty) Get() interface{} {
+	return interface{}(property.value)
+}
+func (property *OperationProperty) Set(value interface{}) bool {
+	if converted, ok := value.(Operation); ok {
+		property.value = converted
+		return true
+	} else {
+		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected an Operation")
+		return false
+	}
+}

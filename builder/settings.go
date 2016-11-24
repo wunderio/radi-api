@@ -15,9 +15,9 @@ type SettingsProvider interface {
  * scope it was derived.
  */
 
-// Constructor for BuildSetting
-func New_BuildSetting(buildType string, implementations Implementations, settingsProvider SettingsProvider) *BuildSetting {
-	return &BuildSetting{
+// Constructor for BuildComponent
+func New_BuildComponent(buildType string, implementations Implementations, settingsProvider SettingsProvider) *BuildComponent {
+	return &BuildComponent{
 		Type:             buildType,
 		Implementations:  implementations,
 		SettingsProvider: settingsProvider,
@@ -25,40 +25,40 @@ func New_BuildSetting(buildType string, implementations Implementations, setting
 }
 
 // A single Builder instruction set.
-type BuildSetting struct {
+type BuildComponent struct {
 	Type             string           // which builder should be used
 	Implementations  Implementations  // which implementations the builder should activate (strings that the builder will understand)
 	SettingsProvider SettingsProvider // this will provide abstract settings that the builder should understand
 }
 
-// An ordered list of BuildSettings
-type BuildSettings struct {
-	builderSettings map[string]BuildSetting
+// An ordered list of BuildComponents
+type BuildComponents struct {
+	buildComponents map[string]BuildComponent
 	order           []string
 }
 
 // safe intitializer
-func (builderSettings *BuildSettings) safe() {
-	if builderSettings.order == nil {
-		builderSettings.builderSettings = map[string]BuildSetting{}
-		builderSettings.order = []string{}
+func (buildComponents *BuildComponents) safe() {
+	if buildComponents.order == nil {
+		buildComponents.buildComponents = map[string]BuildComponent{}
+		buildComponents.order = []string{}
 	}
 }
 
 // Add a builder
-func (builderSettings *BuildSettings) Set(key string, builderSetting BuildSetting) error {
-	builderSettings.safe()
-	if _, exists := builderSettings.builderSettings[key]; !exists {
-		builderSettings.order = append(builderSettings.order, key)
+func (buildComponents *BuildComponents) Set(key string, builderSetting BuildComponent) error {
+	buildComponents.safe()
+	if _, exists := buildComponents.buildComponents[key]; !exists {
+		buildComponents.order = append(buildComponents.order, key)
 	}
-	builderSettings.builderSettings[key] = builderSetting
+	buildComponents.buildComponents[key] = builderSetting
 	return nil
 }
 
 // Get a single builder
-func (builderSettings *BuildSettings) Get(key string) (BuildSetting, error) {
-	builderSettings.safe()
-	if builderSetting, found := builderSettings.builderSettings[key]; found {
+func (buildComponents *BuildComponents) Get(key string) (BuildComponent, error) {
+	buildComponents.safe()
+	if builderSetting, found := buildComponents.buildComponents[key]; found {
 		return builderSetting, nil
 	} else {
 		return builderSetting, errors.New("No such builderler found")
@@ -66,12 +66,12 @@ func (builderSettings *BuildSettings) Get(key string) (BuildSetting, error) {
 }
 
 // Get the builder ordered keys
-func (builderSettings *BuildSettings) Order() []string {
-	builderSettings.safe()
-	return builderSettings.order
+func (buildComponents *BuildComponents) Order() []string {
+	buildComponents.safe()
+	return buildComponents.order
 }
 
 // Does this list have any items
-func (builderSettings *BuildSettings) Empty() bool {
-	return (builderSettings.builderSettings == nil) || (len(builderSettings.builderSettings) == 0)
+func (buildComponents *BuildComponents) Empty() bool {
+	return (buildComponents.buildComponents == nil) || (len(buildComponents.buildComponents) == 0)
 }
