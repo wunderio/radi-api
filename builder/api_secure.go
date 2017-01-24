@@ -5,8 +5,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/james-nesbitt/kraut-api/operation"
-	"github.com/james-nesbitt/kraut-api/operation/security"
+	"github.com/wunderkraut/radi-api/operation"
+	"github.com/wunderkraut/radi-api/operation/security"
 )
 
 /**

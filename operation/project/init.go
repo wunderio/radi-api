@@ -23,7 +23,7 @@ func (create *ProjectInitOperation) Label() string {
 
 // Description for the operation
 func (create *ProjectInitOperation) Description() string {
-	return "Initialize current project as a kraut project, by adding kraut configuration files."
+	return "Initialize current project as a radi project, by adding radi configuration files."
 }
 
 // Is this an internal API operation

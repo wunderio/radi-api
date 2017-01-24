@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	"github.com/james-nesbitt/kraut-api/operation"
+	"github.com/wunderkraut/radi-api/operation"
 )
 
 const (

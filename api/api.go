@@ -27,7 +27,7 @@ package api
  */
 
 import (
-	"github.com/james-nesbitt/kraut-api/operation"
+	"github.com/wunderkraut/radi-api/operation"
 )
 
 // API is an instance of the API library that can return Operations

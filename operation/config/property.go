@@ -3,7 +3,7 @@ package config
 import (
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/james-nesbitt/kraut-api/operation"
+	"github.com/wunderkraut/radi-api/operation"
 )
 
 /**
