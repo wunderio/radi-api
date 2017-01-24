@@ -3,7 +3,7 @@ package security
 import (
 	log "github.com/Sirupsen/logrus"
 
-	api_operation "github.com/james-nesbitt/kraut-api/operation"
+	api_operation "github.com/james-nesbitt/radi-api/operation"
 )
 
 /**
@@ -120,7 +120,7 @@ func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Internal() bool {
 
 // Give an idea of what type of value the property consumes
 func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Type() string {
-	return "github.com/james-nesbitt/kraut-api/operation/security.RuleResult"
+	return "github.com/james-nesbitt/radi-api/operation/security.RuleResult"
 }
 
 // Retrieve the context, or retrieve a Background context by default
@@ -164,7 +164,7 @@ func (userProp *SecurityUserProperty) Internal() bool {
 
 // Give an idea of what type of value the property consumes
 func (userProp *SecurityUserProperty) Type() string {
-	return "github.com/james-nesbitt/kraut-api/operation/security.SecurityUser"
+	return "github.com/james-nesbitt/radi-api/operation/security.SecurityUser"
 }
 
 // Retrieve the context, or retrieve a Background context by default

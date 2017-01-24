@@ -5,7 +5,7 @@ import (
 
 	// log "github.com/Sirupsen/logrus"
 
-	"github.com/james-nesbitt/kraut-api/operation"
+	"github.com/james-nesbitt/radi-api/operation"
 )
 
 func New_SimpleCommandWrapper(operations *operation.Operations) *SimpleCommandWrapper {

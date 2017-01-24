@@ -3,8 +3,8 @@ package builder
 import (
 	"errors"
 
-	"github.com/james-nesbitt/kraut-api/api"
-	"github.com/james-nesbitt/kraut-api/operation"
+	"github.com/james-nesbitt/radi-api/api"
+	"github.com/james-nesbitt/radi-api/operation"
 )
 
 /**

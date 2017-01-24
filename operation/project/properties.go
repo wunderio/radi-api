@@ -1,7 +1,7 @@
 package project
 
 import (
-	"github.com/james-nesbitt/kraut-api/operation"
+	"github.com/james-nesbitt/radi-api/operation"
 )
 
 /**
