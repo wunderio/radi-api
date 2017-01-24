@@ -6,7 +6,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/james-nesbitt/radi-api/operation"
+	"github.com/wunderkraut/radi-api/operation"
 )
 
 /**

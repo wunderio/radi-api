@@ -255,7 +255,7 @@ type OperationProperty struct {
 
 // Give an idea of what type of value the property consumes
 func (property *OperationProperty) Type() string {
-	return "github.com/james-nesbitt/radi-api/operation.Operation"
+	return "github.com/wunderkraut/radi-api/operation.Operation"
 }
 
 // Retrieve the context, or retrieve a Background context by default
