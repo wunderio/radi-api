@@ -28,10 +28,10 @@ type Operation interface {
 	Validate() bool
 
 	// What settings/values does the Operation provide to an implemenentor
-	Properties() *Properties
+	Properties() Properties
 
 	// Execute the Operation
-	Exec() Result
+	Exec(*Properties) Result
 
 	/**
 

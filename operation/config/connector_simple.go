@@ -29,11 +29,9 @@ func (readers ConfigSimpleConnectorReadersOperation) Validate() bool {
 }
 
 // Execute the operation
-func (readers ConfigSimpleConnectorReadersOperation) Exec() operation.Result {
-	result := operation.BaseResult{}
-	result.Set(true, nil)
+func (readers ConfigSimpleConnectorReadersOperation) Exec(props *operation.Properties) operation.Result {
+	result := operation.New_StandardResult()
 
-	props := readers.BaseConfigKeyReadersOperation.Properties()
 	keyProp, _ := props.Get(OPERATION_PROPERTY_CONFIG_KEY)
 	readersProp, _ := props.Get(OPERATION_PROPERTY_CONFIG_VALUE_READERS)
 
@@ -41,13 +39,15 @@ func (readers ConfigSimpleConnectorReadersOperation) Exec() operation.Result {
 		if readersValue := readers.Connector().Readers(key); len(readersValue.Order()) > 0 {
 			readersProp.Set(readersValue)
 		} else {
-			result.Set(false, []error{errors.New("Unknown config key requested")})
+			result.AddError(errors.New("Unknown config key requested"))
+			result.MarkFailed()
 		}
 	} else {
-		result.Set(false, []error{errors.New("Invalid config key requested")})
+		result.AddError(errors.New("Invalid config key requested"))
+		result.MarkFailed()
 	}
 
-	return operation.Result(&result)
+	return operation.Result(result)
 }
 
 // Config Set operation that relies on a ConfigConnector for an io.Writer
@@ -63,25 +63,28 @@ func (writers ConfigSimpleConnectorWritersOperation) Validate() bool {
 }
 
 // Execute the operation
-func (writers ConfigSimpleConnectorWritersOperation) Exec() operation.Result {
-	result := operation.BaseResult{}
-	result.Set(true, nil)
+func (writers ConfigSimpleConnectorWritersOperation) Exec(props *operation.Properties) operation.Result {
+	result := operation.New_StandardResult()
 
-	props := writers.BaseConfigKeyWritersOperation.Properties()
 	keyProp, _ := props.Get(OPERATION_PROPERTY_CONFIG_KEY)
 	writersProp, _ := props.Get(OPERATION_PROPERTY_CONFIG_VALUE_WRITERS)
 
 	if key, ok := keyProp.Get().(string); ok && key != "" {
 		if writersValue := writers.Connector().Writers(key); len(writersValue.Order()) > 0 {
 			writersProp.Set(writersValue)
+			result.MarkSuccess()
 		} else {
-			result.Set(false, []error{errors.New("Unknown config key requested")})
+			result.MarkFailed()
+			result.AddError(errors.New("Unknown config key requested"))
 		}
 	} else {
-		result.Set(false, []error{errors.New("Invalid config key for config writers")})
+		result.MarkFailed()
+		result.AddError(errors.New("Invalid config key for config writers"))
 	}
 
-	return operation.Result(&result)
+	result.MarkFinished()
+
+	return operation.Result(result)
 }
 
 // Config List operation that relies on a ConfigConnector for an io.Writer
@@ -97,23 +100,26 @@ func (list ConfigSimpleConnectorListOperation) Validate() bool {
 }
 
 // Execute the operation
-func (list ConfigSimpleConnectorListOperation) Exec() operation.Result {
-	result := operation.BaseResult{}
-	result.Set(true, nil)
+func (list ConfigSimpleConnectorListOperation) Exec(props *operation.Properties) operation.Result {
+	result := operation.New_StandardResult()
 
-	props := list.BaseConfigKeyKeysOperation.Properties()
 	keyProp, _ := props.Get(OPERATION_PROPERTY_CONFIG_KEY)
 	keysProp, _ := props.Get(OPERATION_PROPERTY_CONFIG_KEYS)
 
 	if key, ok := keyProp.Get().(string); ok || key == "" {
 		if list := list.Connector().List(); len(list) > 0 {
 			keysProp.Set(list)
+			result.MarkSuccess()
 		} else {
-			result.Set(false, []error{errors.New("Config has no keys")})
+			result.MarkFailed()
+			result.AddError(errors.New("Config has no keys"))
 		}
 	} else {
-		result.Set(false, []error{errors.New("Invalid config parent key provided for config list")})
+		result.MarkFailed()
+		result.AddError(errors.New("Invalid config parent key provided for config list"))
 	}
 
-	return operation.Result(&result)
+	result.MarkFinished()
+
+	return operation.Result(result)
 }

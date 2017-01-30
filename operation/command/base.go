@@ -9,67 +9,55 @@ import (
  */
 
 // A Base command operation that provides a single command key string and a command object
-type BaseCommandKeyCommandOperation struct {
-	properties *operation.Properties
-}
+type BaseCommandKeyCommandOperation struct{}
 
 // Return a static keys list Property
-func (base *BaseCommandKeyCommandOperation) Properties() *operation.Properties {
-	if base.properties == nil {
-		base.properties = &operation.Properties{}
+func (base *BaseCommandKeyCommandOperation) Properties() operation.Properties {
+	props := operation.Properties{}
 
-		base.properties.Add(operation.Property(&CommandKeyProperty{}))
-		base.properties.Add(operation.Property(&CommandCommandProperty{}))
-	}
-	return base.properties
+	props.Add(operation.Property(&CommandKeyProperty{}))
+	props.Add(operation.Property(&CommandCommandProperty{}))
+
+	return props
 }
 
 // A Base command operation that returns a list of keys
-type BaseCommandKeyKeysOperation struct {
-	properties *operation.Properties
-}
+type BaseCommandKeyKeysOperation struct{}
 
 // Return a static keys list Property
-func (base *BaseCommandKeyKeysOperation) Properties() *operation.Properties {
-	if base.properties == nil {
-		base.properties = &operation.Properties{}
+func (base *BaseCommandKeyKeysOperation) Properties() operation.Properties {
+	props := operation.Properties{}
 
-		base.properties.Add(operation.Property(&CommandKeyProperty{}))
-		base.properties.Add(operation.Property(&CommandKeysProperty{}))
-	}
-	return base.properties
+	props.Add(operation.Property(&CommandKeyProperty{}))
+	props.Add(operation.Property(&CommandKeysProperty{}))
+
+	return props
 }
 
 // A base command operation that provides a a key, flags strings, and various input and output Properties
-type BaseCommandContextOperation struct {
-	properties *operation.Properties
-}
+type BaseCommandContextOperation struct{}
 
 // get static Properties
-func (base *BaseCommandContextOperation) Properties() *operation.Properties {
-	if base.properties == nil {
-		base.properties = &operation.Properties{}
+func (base *BaseCommandContextOperation) Properties() operation.Properties {
+	props := operation.Properties{}
 
-		base.properties.Add(operation.Property(&CommandContextProperty{}))
-	}
-	return base.properties
+	props.Add(operation.Property(&CommandContextProperty{}))
+
+	return props
 }
 
 // A base command operation that provides a a key, flags strings, and various input and output Properties
-type BaseCommandInputOutputOperation struct {
-	properties *operation.Properties
-}
+type BaseCommandInputOutputOperation struct{}
 
 // get static Properties
-func (base *BaseCommandInputOutputOperation) Properties() *operation.Properties {
-	if base.properties == nil {
-		base.properties = &operation.Properties{}
+func (base *BaseCommandInputOutputOperation) Properties() operation.Properties {
+	props := operation.Properties{}
 
-		base.properties.Add(operation.Property(&CommandInputProperty{}))
-		base.properties.Add(operation.Property(&CommandOutputProperty{}))
-		base.properties.Add(operation.Property(&CommandErrorProperty{}))
-	}
-	return base.properties
+	props.Add(operation.Property(&CommandInputProperty{}))
+	props.Add(operation.Property(&CommandOutputProperty{}))
+	props.Add(operation.Property(&CommandErrorProperty{}))
+
+	return props
 }
 
 // A base command operation that provides akey, flags
@@ -78,11 +66,10 @@ type BaseCommandFlagsOperation struct {
 }
 
 // get static Properties
-func (base *BaseCommandFlagsOperation) Properties() *operation.Properties {
-	if base.properties == nil {
-		base.properties = &operation.Properties{}
+func (base *BaseCommandFlagsOperation) Properties() operation.Properties {
+	props := operation.Properties{}
 
-		base.properties.Add(operation.Property(&CommandFlagsProperty{}))
-	}
-	return base.properties
+	props.Add(operation.Property(&CommandFlagsProperty{}))
+
+	return props
 }

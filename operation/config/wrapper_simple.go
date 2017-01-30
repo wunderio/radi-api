@@ -31,45 +31,55 @@ type SimpleConfigWrapper struct {
 
 // Perform the Get Operation
 func (wrapper *SimpleConfigWrapper) Get(key string) (ConfigScopedValues, error) {
-	var found, success bool
+	var found bool
 	var op operation.Operation
 	var keyProp, readersProp operation.Property
 
-	result := ConfigScopedValues{}
+	values := ConfigScopedValues{}
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_CONFIG_READERS); !found {
-		return result, errors.New("No get operation available in Config Single Wrapper")
+		return values, errors.New("No get operation available in Config Single Wrapper")
 	}
 
-	if keyProp, found = op.Properties().Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
-		return result, errors.New("No key configuraiton available in Config Single Wrapper")
+	props := op.Properties()
+
+	if keyProp, found = props.Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
+		return values, errors.New("No key configuraiton available in Config Single Wrapper")
 	}
 
 	if !keyProp.Set(key) {
-		return result, errors.New("Key property value failed to set in Config Single Wrapper")
+		return values, errors.New("Key property value failed to set in Config Single Wrapper")
 	}
 
-	if readersProp, found = op.Properties().Get(OPERATION_PROPERTY_CONFIG_VALUE_READERS); !found {
-		return result, errors.New("No value property available in Config Single Wrapper")
+	if readersProp, found = props.Get(OPERATION_PROPERTY_CONFIG_VALUE_READERS); !found {
+		return values, errors.New("No value property available in Config Single Wrapper")
 	}
 
-	if success, _ = op.Exec().Success(); !success {
-		return result, errors.New("Operation failed to execute in Config Single Wrapper")
+	// Execute the wrapped operation, and wait for it to finish
+	result := op.Exec(&props)
+	<-result.Finished()
+
+	if !result.Success() {
+		if errs := result.Errors(); len(errs) > 0 {
+			return values, errs[0]
+		} else {
+			return values, errors.New("Unknown error prevented Get execution in Config Single Wrapper")
+		}
 	}
 
 	readers := readersProp.Get().(ScopedReaders)
 	for _, scope := range readers.Order() {
 		reader, _ := readers.Get(scope)
 		if contents, err := ioutil.ReadAll(reader); err == nil {
-			result.Add(scope, ConfigScopedValue(contents))
+			values.Add(scope, ConfigScopedValue(contents))
 		}
 	}
-	return result, nil
+	return values, nil
 }
 
 // Perform the Set Operation
 func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) error {
-	var found, success bool
+	var found bool
 	var op operation.Operation
 	var keyProp, writersProp operation.Property
 
@@ -77,7 +87,9 @@ func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) e
 		return errors.New("No get operation available in Config Single Wrapper")
 	}
 
-	if keyProp, found = op.Properties().Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
+	props := op.Properties()
+
+	if keyProp, found = props.Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
 		return errors.New("No key configuraiton available in Config Single Wrapper")
 	}
 
@@ -85,12 +97,20 @@ func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) e
 		return errors.New("Key property value failed to set in Config Single Wrapper")
 	}
 
-	if writersProp, found = op.Properties().Get(OPERATION_PROPERTY_CONFIG_VALUE_WRITERS); !found {
+	if writersProp, found = props.Get(OPERATION_PROPERTY_CONFIG_VALUE_WRITERS); !found {
 		return errors.New("No writers property available in Config Single Wrapper")
 	}
 
-	if success, _ = op.Exec().Success(); !success {
-		return errors.New("Operation failed to execute in Config Single Wrapper")
+	// Execute the wrapped operation, and wait for it to finish
+	result := op.Exec(&props)
+	<-result.Finished()
+
+	if !result.Success() {
+		if errs := result.Errors(); len(errs) > 0 {
+			return errs[0]
+		} else {
+			return errors.New("Unknown error prevented Set execution in Config Single Wrapper")
+		}
 	}
 
 	writers := writersProp.Get().(ScopedWriters)
@@ -118,33 +138,41 @@ func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) e
 
 // Performe the List Operation
 func (wrapper *SimpleConfigWrapper) List(parent string) ([]string, error) {
-	var found, success bool
+	var found bool
 	var op operation.Operation
 	var keyProp, keysProp operation.Property
-	var errs []error
 
-	result := []string{}
+	list := []string{}
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_CONFIG_LIST); !found {
-		return result, errors.New("No list operation available in Config Wrapper")
+		return list, errors.New("No list operation available in Config Wrapper")
 	}
 
-	if keyProp, found = op.Properties().Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
-		return result, errors.New("No key property available in Config Wrapper")
+	props := op.Properties()
+
+	if keyProp, found = props.Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
+		return list, errors.New("No key property available in Config Wrapper")
 	}
 
 	if !keyProp.Set(parent) {
-		return result, errors.New("Key property value failed to set in Config Wrapper")
+		return list, errors.New("Key property value failed to set in Config Wrapper")
 	}
 
-	if keysProp, found = op.Properties().Get(OPERATION_PROPERTY_CONFIG_KEYS); !found {
-		return result, errors.New("No keys property available in Config Wrapper")
+	if keysProp, found = props.Get(OPERATION_PROPERTY_CONFIG_KEYS); !found {
+		return list, errors.New("No keys property available in Config Wrapper")
 	}
 
-	if success, errs = op.Exec().Success(); !success {
-		return result, errs[0]
+	result := op.Exec(&props)
+	<-result.Finished()
+
+	if !result.Success() {
+		if errs := result.Errors(); len(errs) > 0 {
+			return list, errs[0]
+		} else {
+			return list, errors.New("Unknown error prevented List execution in Config Single Wrapper")
+		}
 	}
 
-	result = keysProp.Get().([]string)
-	return result, nil
+	list = keysProp.Get().([]string)
+	return list, nil
 }

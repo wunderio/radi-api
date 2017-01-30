@@ -71,8 +71,8 @@ type Command interface {
 	Internal() bool
 
 	// What settings does the Operation provide to an implemenentor
-	Properties() *operation.Properties
+	Properties() operation.Properties
 
 	// Execute the Operation
-	Exec() operation.Result
+	Exec(*operation.Properties) operation.Result
 }
