@@ -38,14 +38,15 @@ func (simple *SimpleSecurityWrapper) AuthorizeOperation(operation api_operation.
 	opProp, _ := props.Get(SECURITY_AUTHORIZATION_OPERATION_PROPERTY_KEY)
 	opProp.Set(operation)
 
-	if success, _ := authOp.Exec().Success(); !success {
-		return nil
+	result := authOp.Exec(&props)
+	<-result.Finished()
+
+	if result.Success() {
+		resultProp, _ := props.Get(SECURITY_AUTHORIZATION_RULERESULT_PROPERTY_KEY)
+		return resultProp.Get().(RuleResult)
+	} else {
+		return RuleResult(New_SimpleRuleResult(OPERATION_KEY_SECURITY_AUTHORIZE_OPERATION, "Authorization operation failed to execute", -1))
 	}
-
-	resultProp, _ := props.Get(SECURITY_AUTHORIZATION_RULERESULT_PROPERTY_KEY)
-	return resultProp.Get().(RuleResult)
-
-	return nil
 }
 
 // Return a representation of the current user
@@ -56,12 +57,14 @@ func (simple *SimpleSecurityWrapper) CurrentUser() SecurityUser {
 		return nil
 	}
 
-	if success, _ := authOp.Exec().Success(); !success {
-		props := authOp.Properties()
+	props := authOp.Properties()
+	result := authOp.Exec(&props)
+
+	if result.Success() {
 		opProp, _ := props.Get(SECURITY_USER_PROPERTY_KEY)
 		user := opProp.Get().(SecurityUser)
 		return user
+	} else {
+		return nil
 	}
-
-	return nil
 }

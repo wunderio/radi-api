@@ -24,16 +24,24 @@ type SimpleOrchestrateWrapper struct {
 
 // Orchestrate Up method
 func (wrapper *SimpleOrchestrateWrapper) Up() error {
-	var found, success bool
+	var found bool
 	var op operation.Operation
-	var err []error
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_ORCHESTRATE_DOWN); !found {
 		return errors.New("No up operation available in Orchestrate Wrapper")
 	}
 
-	if success, err = op.Exec().Success(); !success {
-		return err[0] //errors.New("Operation get failed to execute in Setting Wrapper")
+	props := op.Properties()
+	result := op.Exec(&props)
+	<-result.Finished()
+
+	if !result.Success() {
+		errs := result.Errors()
+		if len(errs) == 0 {
+			return errors.New("Operation orchestrate UP failed to execute in Setting Wrapper")
+		} else {
+			return errs[0]
+		}
 	}
 
 	return nil
@@ -41,16 +49,24 @@ func (wrapper *SimpleOrchestrateWrapper) Up() error {
 
 // Orchestrate Down method
 func (wrapper *SimpleOrchestrateWrapper) Down() error {
-	var found, success bool
+	var found bool
 	var op operation.Operation
-	var err []error
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_ORCHESTRATE_DOWN); !found {
 		return errors.New("No down operation available in Orchestrate Wrapper")
 	}
 
-	if success, err = op.Exec().Success(); !success {
-		return err[0] //errors.New("Operation get failed to execute in Setting Wrapper")
+	props := op.Properties()
+	result := op.Exec(&props)
+	<-result.Finished()
+
+	if !result.Success() {
+		errs := result.Errors()
+		if len(errs) == 0 {
+			return errors.New("Operation orchestrate DOWN failed to execute in Setting Wrapper")
+		} else {
+			return errs[0]
+		}
 	}
 
 	return nil

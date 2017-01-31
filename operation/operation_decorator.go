@@ -12,6 +12,9 @@ import (
  * executing, the decorator is first executed, and if sucessful
  * then the decorated is executed.
  *
+ * This operation blocks while performing the decorating operation
+ * until it is finished.
+ *
  * If more custom sequencing is desired, extend this operation
  * and override the Exec() method
  */
@@ -50,19 +53,22 @@ func (operation *DecoratedOperation) Validate() bool {
 }
 
 // Get Operation Properties from both operations
-func (operation *DecoratedOperation) Properties() *Properties {
+func (operation *DecoratedOperation) Properties() Properties {
 	Properties := operation.decorated.Properties()
-	Properties.Merge(*operation.decorating.Properties())
+	Properties.Merge(operation.decorating.Properties())
 	return Properties
 }
 
 // Execute the decorating operation, and then execute the decorated operation if the decorating was successful
-func (operation *DecoratedOperation) Exec() Result {
-	result := operation.decorating.Exec()
-	if success, _ := result.Success(); !success {
+func (operation *DecoratedOperation) Exec(props *Properties) Result {
+	result := operation.decorating.Exec(props)
+	<-result.Finished()
+
+	if !result.Success() {
 		return result
 	}
-	return operation.decorated.Exec()
+
+	return operation.decorated.Exec(props)
 }
 
 /**
@@ -90,26 +96,32 @@ type DecoratedBooleanPropertyBasedOperation struct {
 }
 
 // Execute the decorating operation, and then execute the decorated operation if the decorator property is true
-func (operation *DecoratedBooleanPropertyBasedOperation) Exec() Result {
-	result := BaseResult{}
-	result.Set(true, []error{})
+func (operation *DecoratedBooleanPropertyBasedOperation) Exec(props *Properties) Result {
+	boolValue := false
+	result := New_StandardResult()
 
-	result.Merge(operation.decorating.Exec())
+	decoratingResult := operation.decorating.Exec(props)
+	<-decoratingResult.Finished()
 
-	if success, _ := result.Success(); success {
+	if decoratingResult.Success() {
 		props := operation.decorating.Properties()
 		if boolProp, found := props.Get(operation.property); !found {
-			result.Set(false, []error{errors.New("Decorator operation did not have the targeted property")})
+			result.AddError(errors.New("Decorator operation did not have the targeted property"))
+			result.MarkFailed()
 		} else if boolProp.Type() != "bool" {
-			result.Set(false, []error{errors.New("Decorator operation targeted property was not a boolean [" + operation.property + ":" + boolProp.Type() + "]")})
-		} else if !boolProp.Get().(bool) {
-			result.Set(false, []error{})
+			result.AddError(errors.New("Decorator operation targeted property was not a boolean [" + operation.property + ":" + boolProp.Type() + "]"))
+			result.MarkFailed()
+		} else {
+			boolValue = boolProp.Get().(bool)
+			if !boolValue {
+				result.MarkFailed()
+			}
 		}
 	}
 
-	if success, _ := result.Success(); success {
-		return operation.decorated.Exec()
+	if result.Success() && boolValue {
+		return operation.decorated.Exec(props)
+	} else {
+		return Result(result)
 	}
-
-	return Result(&result)
 }

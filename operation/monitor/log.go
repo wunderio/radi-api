@@ -47,9 +47,7 @@ func (logger *BaseMonitorLogOperation) Validate() bool {
 }
 
 // Standard output logger
-type MonitorStandardLogOperation struct {
-	properties *operation.Properties
-}
+type MonitorStandardLogOperation struct{}
 
 // Id the operation
 func (logger *MonitorStandardLogOperation) Id() string {
@@ -77,23 +75,22 @@ func (logger *MonitorStandardLogOperation) Validate() bool {
 }
 
 // Add a Message propery
-func (logger *MonitorStandardLogOperation) Properties() *operation.Properties {
-	if logger.properties == nil {
-		logger.properties = &operation.Properties{}
+func (logger *MonitorStandardLogOperation) Properties() operation.Properties {
+	props := operation.Properties{}
 
-		logger.properties.Add(operation.Property(NewMonitorLogTypeProperty("info")))
-		logger.properties.Add(operation.Property(&MonitorLogMessageProperty{}))
-	}
-	return logger.properties
+	props.Add(operation.Property(NewMonitorLogTypeProperty("info")))
+	props.Add(operation.Property(&MonitorLogMessageProperty{}))
+
+	return props
 }
 
 // Exec the log output
-func (logger *MonitorStandardLogOperation) Exec() operation.Result {
-	baseResult := operation.BaseResult{}
+func (logger *MonitorStandardLogOperation) Exec(props *operation.Properties) operation.Result {
+	result := operation.New_StandardResult()
 
 	// we ignore the conf tests, as we ensured that the conf would exist in the property() method
-	logTypeProp, _ := logger.Properties().Get(OPERATION_PROPERTY_CONF_MONITOR_LOG_TYPE)
-	messageProp, _ := logger.Properties().Get(OPERATION_PROPERTY_CONF_MONITOR_LOG_MESSAGE)
+	logTypeProp, _ := props.Get(OPERATION_PROPERTY_CONF_MONITOR_LOG_TYPE)
+	messageProp, _ := props.Get(OPERATION_PROPERTY_CONF_MONITOR_LOG_MESSAGE)
 
 	var logType, message string
 	var ok bool
@@ -116,8 +113,10 @@ func (logger *MonitorStandardLogOperation) Exec() operation.Result {
 		}
 	}
 
-	baseResult.Set(true, []error{})
-	return operation.Result(&baseResult)
+	result.MarkSuccess()
+	result.MarkFinished()
+
+	return operation.Result(result)
 }
 
 func NewMonitorLogTypeProperty(logType string) *MonitorLogTypeProperty {

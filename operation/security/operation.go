@@ -3,7 +3,7 @@ package security
 import (
 	"errors"
 
-	api_operation "github.com/wunderkraut/radi-api/operation"
+	operation "github.com/wunderkraut/radi-api/operation"
 )
 
 /**
@@ -11,7 +11,7 @@ import (
  */
 
 // A constructor for DecoratedBooleanPropertyBasedOperation
-func New_SecureBuilderAuthorizationDecoratorOperation(authorizing api_operation.Operation, authorized api_operation.Operation, operationProperty string, successProperty string) *SecureBuilderAuthorizationDecoratorOperation {
+func New_SecureBuilderAuthorizationDecoratorOperation(authorizing operation.Operation, authorized operation.Operation, operationProperty string, successProperty string) *SecureBuilderAuthorizationDecoratorOperation {
 	return &SecureBuilderAuthorizationDecoratorOperation{
 		authorizing:       authorizing,
 		authorized:        authorized,
@@ -23,12 +23,15 @@ func New_SecureBuilderAuthorizationDecoratorOperation(authorizing api_operation.
 /**
  * An operation decorator that uses one operation, with a boolean property
  * to authorized the execution of a second operation
+ *
+ * This operation blocks the second operation until the first operation has
+ * marked itself as ->Finished()
  */
 
 // Custom Authorization Decorator operation
 type SecureBuilderAuthorizationDecoratorOperation struct {
-	authorizing       api_operation.Operation
-	authorized        api_operation.Operation
+	authorizing       operation.Operation
+	authorized        operation.Operation
 	operationProperty string
 	successProperty   string
 }
@@ -59,8 +62,8 @@ func (op *SecureBuilderAuthorizationDecoratorOperation) Validate() bool {
 }
 
 // Get Operation Properties from both operations
-func (op *SecureBuilderAuthorizationDecoratorOperation) Properties() *api_operation.Properties {
-	props := api_operation.Properties{}
+func (op *SecureBuilderAuthorizationDecoratorOperation) Properties() operation.Properties {
+	props := operation.Properties{}
 
 	// add auth operation props as internal only, by decorating them
 	authProps := op.authorizing.Properties()
@@ -73,56 +76,70 @@ func (op *SecureBuilderAuthorizationDecoratorOperation) Properties() *api_operat
 		case SECURITY_AUTHORIZATION_SUCCEEDED_PROPERTY_KEY:
 			props.Add(authProp)
 		default:
-			props.Add(api_operation.New_DecoratingInternalizerProperty(authProp).Property())
+			props.Add(operation.New_DecoratingInternalizerProperty(authProp).Property())
 		}
 	}
 
-	props.Merge(*op.authorized.Properties())
-	return &props
+	props.Merge(op.authorized.Properties())
+	return props
 }
 
 // Execute the authorizing operation, and then execute the authorized operation if the authorizing property is true
-func (op *SecureBuilderAuthorizationDecoratorOperation) Exec() api_operation.Result {
-	result := api_operation.BaseResult{}
-	result.Set(true, []error{})
+func (op *SecureBuilderAuthorizationDecoratorOperation) Exec(props *operation.Properties) operation.Result {
+	result := operation.New_StandardResult()
 
-	authOpProps := op.authorizing.Properties()
-	successProp, successPropFound := authOpProps.Get(op.successProperty)
-	operationProp, operationPropFound := authOpProps.Get(op.operationProperty)
+	successProp, successPropFound := props.Get(op.successProperty)
+	operationProp, operationPropFound := props.Get(op.operationProperty)
 
 	if !(successPropFound && operationPropFound) || successProp.Type() != "bool" {
 		// this authorization op is not valid, it is either missing its op or success property
 
 		if !operationPropFound {
-			result.Set(false, []error{errors.New("Secure Builder API Authorize operation is invalid.  It is missing the operation authorization property.")})
+			result.MarkFailed()
+			result.AddError(errors.New("Secure Builder API Authorize operation is invalid.  It is missing the operation authorization property."))
 		} else if !successPropFound {
-			result.Set(false, []error{errors.New("Secure Builder API Authorize operation is invalid.  It is missing the authorization success property.")})
+			result.MarkFailed()
+			result.AddError(errors.New("Secure Builder API Authorize operation is invalid.  It is missing the authorization success property."))
 		} else if successProp.Type() != "bool" {
-			result.Set(false, []error{errors.New("Secure Builder API Authorize operation is invalid.  The authorization success property is not a bool.")})
+			result.MarkFailed()
+			result.AddError(errors.New("Secure Builder API Authorize operation is invalid.  The authorization success property is not a bool."))
 		}
 
-		result.Set(false, []error{errors.New("Secure Builder API could not execute authorized Operation.")})
+		result.MarkFailed()
+		result.AddError(errors.New("Secure Builder API could not execute authorized Operation."))
 	} else {
 
 		operationProp.Set(op.authorized)
-		result.Merge(op.authorizing.Exec())
 
-		if success, errs := result.Success(); !success {
-			errs = append(errs, errors.New("Operation authorization failed to execute."))
-			result.Set(false, errs)
+		authResult := op.authorizing.Exec(props)
+		<-authResult.Finished()
+
+		result.Merge(authResult)
+
+		if !result.Success() {
+			result.MarkFailed()
+			result.AddErrors(append(result.Errors(), errors.New("Operation authorization failed to execute.")))
 		} else {
 
 			if successProp.Get().(bool) {
 				// The Auth op returned a TRUE success value
-				result.Merge(op.authorized.Exec())
+
+				execResult := op.authorized.Exec(props)
+				<-execResult.Finished()
+
+				result.Merge(execResult)
+				// we should return quicklly after this if the execResult had .finished already at TRUE
 			} else {
 				// The Auth op returned a FALSE success value
-				result.Set(false, []error{errors.New("Authorization failed.  You are not permitted to execute the requested operation: " + op.authorized.Id())})
+				result.MarkFailed()
+				result.AddError(errors.New("Authorization failed.  You are not permitted to execute the requested operation: " + op.authorized.Id()))
 			}
 
 		}
 
 	}
 
-	return api_operation.Result(&result)
+	result.MarkFinished()
+
+	return operation.Result(result)
 }

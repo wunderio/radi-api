@@ -8,6 +8,12 @@ package operation
 
 // Result is an what an operation returns
 type Result interface {
+	// Give a bool channel indicating that the operation is finished
+	Finished() chan bool
+
 	// Did the operation execute successfully? Return any error that occured
-	Success() (bool, []error)
+	Success() bool
+
+	// return any errors that occured.
+	Errors() []error
 }

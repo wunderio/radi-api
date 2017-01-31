@@ -19,70 +19,84 @@ type SimpleCommandWrapper struct {
 }
 
 func (wrapper *SimpleCommandWrapper) Get(key string) (Command, error) {
-	var found, success bool
+	var found bool
 	var op operation.Operation
 	var keyProp, commandProp operation.Property
-	var err []error
 
-	var result Command
+	var comm Command
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_COMMAND_GET); !found {
-		return result, errors.New("No get operation available in Command Wrapper")
+		return comm, errors.New("No get operation available in Command Wrapper")
 	}
 
-	if keyProp, found = op.Properties().Get(OPERATION_PROPERTY_COMMAND_KEY); !found {
-		return result, errors.New("No key property available in Get operation in Command Wrapper")
+	props := op.Properties()
+
+	if keyProp, found = props.Get(OPERATION_PROPERTY_COMMAND_KEY); !found {
+		return comm, errors.New("No key property available in Get operation in Command Wrapper")
 	}
 
 	if !keyProp.Set(key) {
-		return result, errors.New("Key property value failed to set in Command Wrapper")
+		return comm, errors.New("Key property value failed to set in Command Wrapper")
 	}
 
-	if commandProp, found = op.Properties().Get(OPERATION_PROPERTY_COMMAND_COMMAND); !found {
-		return result, errors.New("No command property available in Get operation in Command Wrapper")
+	if commandProp, found = props.Get(OPERATION_PROPERTY_COMMAND_COMMAND); !found {
+		return comm, errors.New("No command property available in Get operation in Command Wrapper")
 	}
 
-	if success, err = op.Exec().Success(); !success {
-		return result, err[0] //errors.New("Operation get failed to execute in Command Wrapper")
-	}
+	result := op.Exec(&props)
+	<-result.Finished()
 
-	result = commandProp.Get().(Command)
-
-	return result, nil
-}
-
-func (wrapper *SimpleCommandWrapper) List(parent string) ([]string, error) {
-	var found, success bool
-	var op operation.Operation
-	var keyProp, keysProp operation.Property
-	var errs []error
-
-	result := []string{}
-
-	if op, found = wrapper.operations.Get(OPERATION_ID_COMMAND_LIST); !found {
-		return result, errors.New("No list operation available in Command Wrapper")
-	}
-
-	if keyProp, found = op.Properties().Get(OPERATION_PROPERTY_COMMAND_KEY); !found {
-		return result, errors.New("No key property available in Command Wrapper")
-	}
-
-	if !keyProp.Set(parent) {
-		return result, errors.New("Key property value failed to set in Command Wrapper")
-	}
-
-	if keysProp, found = op.Properties().Get(OPERATION_PROPERTY_COMMAND_KEYS); !found {
-		return result, errors.New("No keys property available in Command Wrapper")
-	}
-
-	if success, errs = op.Exec().Success(); !success {
-		if len(errs) > 0 {
-			return result, errs[0]
+	if !result.Success() {
+		errs := result.Errors()
+		if len(errs) == 0 {
+			errors.New("Operation get failed to execute in Command Wrapper")
 		} else {
-			return result, errors.New("Unknown error occured listing commands")
+			return comm, errs[0]
 		}
 	}
 
-	result = keysProp.Get().([]string)
-	return result, nil
+	comm = commandProp.Get().(Command)
+
+	return comm, nil
+}
+
+func (wrapper *SimpleCommandWrapper) List(parent string) ([]string, error) {
+	var found bool
+	var op operation.Operation
+	var keyProp, keysProp operation.Property
+
+	list := []string{}
+
+	if op, found = wrapper.operations.Get(OPERATION_ID_COMMAND_LIST); !found {
+		return list, errors.New("No list operation available in Command Wrapper")
+	}
+
+	props := op.Properties()
+
+	if keyProp, found = props.Get(OPERATION_PROPERTY_COMMAND_KEY); !found {
+		return list, errors.New("No key property available in Command Wrapper")
+	}
+
+	if !keyProp.Set(parent) {
+		return list, errors.New("Key property value failed to set in Command Wrapper")
+	}
+
+	if keysProp, found = props.Get(OPERATION_PROPERTY_COMMAND_KEYS); !found {
+		return list, errors.New("No keys property available in Command Wrapper")
+	}
+
+	result := op.Exec(&props)
+	<-result.Finished()
+
+	if !result.Success() {
+		errs := result.Errors()
+		if len(errs) == 0 {
+			return list, errors.New("Unknown error occured listing commands")
+		} else {
+			return list, errs[0]
+		}
+	}
+
+	list = keysProp.Get().([]string)
+	return list, nil
 }
