@@ -38,6 +38,7 @@ func (readers ConfigSimpleConnectorReadersOperation) Exec(props *operation.Prope
 	if key, ok := keyProp.Get().(string); ok && key != "" {
 		if readersValue := readers.Connector().Readers(key); len(readersValue.Order()) > 0 {
 			readersProp.Set(readersValue)
+			result.MarkSuccess()
 		} else {
 			result.AddError(errors.New("Unknown config key requested"))
 			result.MarkFailed()
@@ -46,6 +47,8 @@ func (readers ConfigSimpleConnectorReadersOperation) Exec(props *operation.Prope
 		result.AddError(errors.New("Invalid config key requested"))
 		result.MarkFailed()
 	}
+
+	result.MarkFinished()
 
 	return operation.Result(result)
 }

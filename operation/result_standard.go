@@ -11,7 +11,7 @@ type StandardResult struct {
 func New_StandardResult() *StandardResult {
 	return &StandardResult{
 		finished: make(chan bool),
-		success:  false,
+		success:  true, // results default to success, to prevent silly issues.
 		errors:   []error{},
 	}
 }
@@ -38,17 +38,11 @@ func (base *StandardResult) MarkFailed() {
 
 // Add some errors to the result
 func (base *StandardResult) AddErrors(errs []error) {
-	if base.errors == nil {
-		base.errors = []error{}
-	}
 	base.errors = append(base.errors, errs...)
 }
 
 // Add some errors to the result
 func (base *StandardResult) AddError(err error) {
-	if base.errors == nil {
-		base.errors = []error{}
-	}
 	base.errors = append(base.errors, err)
 }
 

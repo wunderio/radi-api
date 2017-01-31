@@ -38,21 +38,21 @@ func (wrapper *SimpleConfigWrapper) Get(key string) (ConfigScopedValues, error) 
 	values := ConfigScopedValues{}
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_CONFIG_READERS); !found {
-		return values, errors.New("No get operation available in Config Single Wrapper")
+		return values, errors.New("No get operation available in Config Simple Wrapper")
 	}
 
 	props := op.Properties()
 
 	if keyProp, found = props.Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
-		return values, errors.New("No key configuraiton available in Config Single Wrapper")
+		return values, errors.New("No key configuraiton available in Config Simple Wrapper")
 	}
 
 	if !keyProp.Set(key) {
-		return values, errors.New("Key property value failed to set in Config Single Wrapper")
+		return values, errors.New("Key property value failed to set in Config Simple Wrapper")
 	}
 
 	if readersProp, found = props.Get(OPERATION_PROPERTY_CONFIG_VALUE_READERS); !found {
-		return values, errors.New("No value property available in Config Single Wrapper")
+		return values, errors.New("No value property available in Config Simple Wrapper")
 	}
 
 	// Execute the wrapped operation, and wait for it to finish
@@ -63,7 +63,7 @@ func (wrapper *SimpleConfigWrapper) Get(key string) (ConfigScopedValues, error) 
 		if errs := result.Errors(); len(errs) > 0 {
 			return values, errs[0]
 		} else {
-			return values, errors.New("Unknown error prevented Get execution in Config Single Wrapper")
+			return values, errors.New("Unknown error prevented Get execution in Config Simple Wrapper")
 		}
 	}
 
@@ -84,21 +84,21 @@ func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) e
 	var keyProp, writersProp operation.Property
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_CONFIG_WRITERS); !found {
-		return errors.New("No get operation available in Config Single Wrapper")
+		return errors.New("No get operation available in Config Simple Wrapper")
 	}
 
 	props := op.Properties()
 
 	if keyProp, found = props.Get(OPERATION_PROPERTY_CONFIG_KEY); !found {
-		return errors.New("No key configuraiton available in Config Single Wrapper")
+		return errors.New("No key configuraiton available in Config Simple Wrapper")
 	}
 
 	if !keyProp.Set(key) {
-		return errors.New("Key property value failed to set in Config Single Wrapper")
+		return errors.New("Key property value failed to set in Config Simple Wrapper")
 	}
 
 	if writersProp, found = props.Get(OPERATION_PROPERTY_CONFIG_VALUE_WRITERS); !found {
-		return errors.New("No writers property available in Config Single Wrapper")
+		return errors.New("No writers property available in Config Simple Wrapper")
 	}
 
 	// Execute the wrapped operation, and wait for it to finish
@@ -109,7 +109,7 @@ func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) e
 		if errs := result.Errors(); len(errs) > 0 {
 			return errs[0]
 		} else {
-			return errors.New("Unknown error prevented Set execution in Config Single Wrapper")
+			return errors.New("Unknown error prevented Set execution in Config Simple Wrapper")
 		}
 	}
 
@@ -169,7 +169,7 @@ func (wrapper *SimpleConfigWrapper) List(parent string) ([]string, error) {
 		if errs := result.Errors(); len(errs) > 0 {
 			return list, errs[0]
 		} else {
-			return list, errors.New("Unknown error prevented List execution in Config Single Wrapper")
+			return list, errors.New("Unknown error prevented List execution in Config Simple Wrapper")
 		}
 	}
 
