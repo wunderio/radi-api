@@ -243,7 +243,7 @@ func (contextConf *CommandContextProperty) Label() string {
 
 // Description for the Property
 func (contextConf *CommandContextProperty) Description() string {
-	return "A golang.org/x/net/context for controling execution."
+	return "A context for controling execution."
 }
 
 // Is the Property internal only
