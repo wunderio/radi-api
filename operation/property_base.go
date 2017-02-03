@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"golang.org/x/net/context"
+	"context"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -227,7 +227,7 @@ type ContextProperty struct {
 
 // Give an idea of what type of value the property consumes
 func (property *ContextProperty) Type() string {
-	return "golang.org/x/net/context.Context"
+	return "context.Context"
 }
 
 // Retrieve the context, or retrieve a Background context by default
@@ -243,7 +243,7 @@ func (property *ContextProperty) Set(value interface{}) bool {
 		property.value = converted
 		return true
 	} else {
-		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected golang.org/x/net/context/Context")
+		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected context/Context")
 		return false
 	}
 }
