@@ -65,7 +65,7 @@ func (authSuccessProp *SecurityAuthorizationSucceededProperty) Description() str
 
 // Mark a property as being for internal use only (no shown to users)
 func (authSuccessProp *SecurityAuthorizationSucceededProperty) Internal() bool {
-	return false
+	return true
 }
 
 // An Operation property
@@ -90,7 +90,7 @@ func (operationProp *SecurityAuthorizationOperationProperty) Description() strin
 
 // Mark a property as being for internal use only (no shown to users)
 func (operationProp *SecurityAuthorizationOperationProperty) Internal() bool {
-	return false
+	return true
 }
 
 // An Operation property
@@ -159,7 +159,7 @@ func (userProp *SecurityUserProperty) Description() string {
 
 // Mark a property as being for internal use only (no shown to users)
 func (userProp *SecurityUserProperty) Internal() bool {
-	return false
+	return true
 }
 
 // Give an idea of what type of value the property consumes
