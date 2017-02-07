@@ -56,5 +56,5 @@ func (authenticate *BaseSecurityUserOperation) Description() string {
 
 // Is this an internal API operation
 func (authenticate *BaseSecurityUserOperation) Internal() bool {
-	return false
+	return true
 }
