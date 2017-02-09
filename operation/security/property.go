@@ -40,7 +40,7 @@ func (authSuccessProp *SecurityAuthenticationSucceededProperty) Description() st
 
 // Mark a property as being for internal use only (no shown to users)
 func (authSuccessProp *SecurityAuthenticationSucceededProperty) Internal() bool {
-	return false
+	return true
 }
 
 // A boolean property for if an authorization succeeded (was granted)
@@ -115,7 +115,7 @@ func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Description() str
 
 // Mark a property as being for internal use only (no shown to users)
 func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Internal() bool {
-	return false
+	return true
 }
 
 // Give an idea of what type of value the property consumes
