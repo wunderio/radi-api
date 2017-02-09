@@ -6,9 +6,9 @@ package builder
  * This way different wrappers could be used to interpret
  * JSON or YML or whatever.
  */
-type BuilderConfigWrapper interface {
+type ProjectConfigWrapper interface {
 	DefaultScope() string
-	Get(key string) (BuildComponent, bool)
-	Set(key string, values BuildComponent) bool
+	Get(key string) (ProjectComponent, bool)
+	Set(key string, values ProjectComponent) bool
 	List() []string
 }

@@ -17,6 +17,14 @@ type StandardProject struct {
 	activated []string
 }
 
+// Constructor for StandardProject
+func New_StandardProject() *StandardProject {
+	return &StandardProject{
+		builders: Builders{},
+		activated: []string{},
+	}
+}
+
 // Make a new Builder available in the Project (available to be activated)
 func (project *StandardProject) API() api.API {
 	return api.API(project)

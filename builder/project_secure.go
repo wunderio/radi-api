@@ -3,6 +3,7 @@ package builder
 import (
 	"errors"
 
+	"github.com/wunderkraut/radi-api/api"
 	"github.com/wunderkraut/radi-api/operation"
 	"github.com/wunderkraut/radi-api/operation/security"
 )
@@ -19,6 +20,18 @@ import (
  */
 type SecureProject struct {
 	StandardProject
+}
+
+// Constructor for SecureProject
+func New_SecureProject() *SecureProject {
+	return &SecureProject{
+		StandardProject: *New_StandardProject(),
+	}
+}
+
+// Convert his project to an API implementation
+func (project *SecureProject) API() api.API {
+	return api.API(project)
 }
 
 // Ask a SecureProject to validate itself, after it has been fully activated, before we ask for operations.

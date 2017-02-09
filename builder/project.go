@@ -20,7 +20,7 @@ import (
  */
 
 type Project interface {
-	// Convert this Project to an API implementation
+	// Produc an API implementation from this builder
 	API() api.API
 	// Make a new Builder available in the Project (available to be activated)
 	AddBuilder(builder Builder)
