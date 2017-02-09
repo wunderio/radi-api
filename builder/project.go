@@ -1,8 +1,6 @@
 package builder
 
 import (
-	"errors"
-
 	"github.com/wunderkraut/radi-api/api"
 	"github.com/wunderkraut/radi-api/operation"
 )
@@ -22,6 +20,8 @@ import (
  */
 
 type Project interface {
+	// Convert this Project to an API implementation
+	API() api.API
 	// Make a new Builder available in the Project (available to be activated)
 	AddBuilder(builder Builder)
 	// Activate some implementations for a handler on the builder. The builder should use these to decide what handlers to include

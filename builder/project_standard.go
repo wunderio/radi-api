@@ -1,5 +1,12 @@
 package builder
 
+import (
+	"errors"
+
+	"github.com/wunderkraut/radi-api/api"
+	"github.com/wunderkraut/radi-api/operation"
+)
+
 /**
  * A standard Project struct
  */
@@ -8,6 +15,11 @@ package builder
 type StandardProject struct {
 	builders  Builders
 	activated []string
+}
+
+// Make a new Builder available in the Project (available to be activated)
+func (project *StandardProject) API() api.API {
+	return api.API(project)
 }
 
 // Make a new Builder available in the Project (available to be activated)
@@ -42,14 +54,14 @@ func (project *StandardProject) ActivateBuilder(id string, implementations Imple
 
 // Ask a StandardProject to validate itself, after it has been fully activated, before we ask for operations.
 func (project *StandardProject) Validate() operation.Result {
-	result := api_operation.New_StandardResult()
+	result := operation.New_StandardResult()
 	result.MarkSuccess()
 	result.MarkFinished()
 	return result.Result()
 }
 
 // Return a list of operations for Project from all of the activated Builders
-func (project *StandardProject) Operations() (operation.Operations, error) {
+func (project *StandardProject) Operations() operation.Operations {
 	ops := operation.Operations{}
 	for _, id := range project.activated {
 		builder, _ := project.builders.Get(id)

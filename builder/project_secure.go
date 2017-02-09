@@ -23,7 +23,7 @@ type SecureProject struct {
 
 // Ask a SecureProject to validate itself, after it has been fully activated, before we ask for operations.
 func (project *SecureProject) Validate() operation.Result {
-	result := api_operation.New_StandardResult()
+	result := operation.New_StandardResult()
 
 	// Build all of the actual operations, which we will then decorate
 	builderOps := project.StandardProject.Operations()
@@ -35,7 +35,7 @@ func (project *SecureProject) Validate() operation.Result {
 	 * Use some default values
 	 */
 
-	if authOp, found := builderOps.Get(security.OPERATION_KEY_SECURITY_AUTHORIZE_OPERATION); !found {
+	if _, found := builderOps.Get(security.OPERATION_KEY_SECURITY_AUTHORIZE_OPERATION); !found {
 		result.AddError(errors.New("Secure Builder API desn't have access to any security Authorization operation."))
 		result.MarkFailed()
 	} else {
