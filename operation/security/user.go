@@ -1,5 +1,9 @@
 package security
 
+import (
+	"os/user"
+)
+
 /**
  * User retrieval related functionality
  */
@@ -29,6 +33,36 @@ type SecurityUser interface {
 	 * like RSA passphrase or password entry.
 	 */
 	// Authenticate(AuthenticationChallenge) AuthenticationResponse
+}
+
+/**
+ * A SecurityUser implementation that wraps the 
+ * core os/user.User object
+ */
+type CoreUserSecurityUser struct {
+	user *user.User
+}
+
+// Constructor for CoreUserSecurityUser
+func New_CoreUserSecurityUser(coreUser *user.User) *CoreUserSecurityUser {
+	return &CoreUserSecurityUser{
+		user: coreUser,
+	}
+}
+
+// Return this object as a SecurityUser interface
+func (coreUser *CoreUserSecurityUser) SecurityUser() SecurityUser {
+	return SecurityUser(coreUser)
+}
+
+// Return a machine id for the user for things like authorization checks
+func (coreUser *CoreUserSecurityUser) Id() string {
+	return coreUser.user.Username
+}
+
+// Human readable display id for the user
+func (coreUser *CoreUserSecurityUser) Label() string {
+	return coreUser.user.Name
 }
 
 /**
