@@ -36,12 +36,11 @@ func (readers ConfigSimpleConnectorReadersOperation) Exec(props *operation.Prope
 	readersProp, _ := props.Get(OPERATION_PROPERTY_CONFIG_VALUE_READERS)
 
 	if key, ok := keyProp.Get().(string); ok && key != "" {
-		if readersValue := readers.Connector().Readers(key); len(readersValue.Order()) > 0 {
-			readersProp.Set(readersValue)
-			result.MarkSuccess()
-		} else {
-			result.AddError(errors.New("Unknown config key requested"))
-			result.MarkFailed()
+		readersValue := readers.Connector().Readers(key)
+		readersProp.Set(readersValue)
+		result.MarkSuccess()
+		if len(readersValue.Order()) == 0 {
+			result.AddError(errors.New("No config found for requested key"))
 		}
 	} else {
 		result.AddError(errors.New("Invalid config key requested"))
