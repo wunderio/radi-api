@@ -38,7 +38,7 @@ func (decProp *DecoratingInternalizerProperty) Description() string {
 
 // Mark a property as being for internal use only (no shown to users)
 func (decProp *DecoratingInternalizerProperty) Internal() bool {
-	return false
+	return true
 }
 
 // Give an idea of what type of value the property consumes
