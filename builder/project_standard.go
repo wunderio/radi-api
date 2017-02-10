@@ -25,6 +25,11 @@ func New_StandardProject() *StandardProject {
 	}
 }
 
+// Convert this to a Project interface
+func (project *StandardProject) Project() Project {
+	return Project(project)
+}
+
 // Make a new Builder available in the Project (available to be activated)
 func (project *StandardProject) API() api.API {
 	return api.API(project)

@@ -29,5 +29,5 @@ type Project interface {
 	// Ask a BuilderAPI to validate itself, after it has been fully activated, before we ask for operations.
 	Validate() operation.Result
 	// Return a list of operations for the constructor from all of the activated Builders
-	Operations() (operation.Operations, error)
+	Operations() operation.Operations
 }

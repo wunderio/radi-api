@@ -29,6 +29,11 @@ func New_SecureProject() *SecureProject {
 	}
 }
 
+// Convert this to a Project interface
+func (project *SecureProject) Project() Project {
+	return Project(project)
+}
+
 // Convert his project to an API implementation
 func (project *SecureProject) API() api.API {
 	return api.API(project)
