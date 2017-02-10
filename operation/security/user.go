@@ -36,7 +36,7 @@ type SecurityUser interface {
 }
 
 /**
- * A SecurityUser implementation that wraps the 
+ * A SecurityUser implementation that wraps the
  * core os/user.User object
  */
 type CoreUserSecurityUser struct {

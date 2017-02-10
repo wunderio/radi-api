@@ -16,7 +16,7 @@ import (
  * to build Config based operations
  */
 
-// A single API handler for providing operations
+// A single API handler builder
 type Builder interface {
 	// Set a API for this Handler
 	SetAPI(parent api.API)

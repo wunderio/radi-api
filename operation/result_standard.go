@@ -68,3 +68,8 @@ func (base *StandardResult) Merge(merge Result) {
 	}
 	base.AddErrors(merge.Errors())
 }
+
+// Return this struct as a Result interfacew
+func (base *StandardResult) Result() Result {
+	return Result(base)
+}
