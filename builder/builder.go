@@ -1,84 +1,37 @@
 package builder
 
 import (
-	"errors"
-
-	"github.com/wunderkraut/radi-api/api"
-	"github.com/wunderkraut/radi-api/operation"
+	api_api "github.com/wunderkraut/radi-api/api"
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_result "github.com/wunderkraut/radi-api/result"
 )
 
 /**
- * Builders are essentially meta handlers, which can
- * produce handlers from simpler settings.
+ * Builders are essentially meta handlers, which can produce handlers from
+ * simpler settings.
  *
- * Builders often need a back reference to the api
- * as they may need other operations, for example
- * to build Config based operations
+ * Builders often need a back reference to the api as they may need other
+ * operations, for example to build Config based operations
  */
 
 // A single API handler builder
 type Builder interface {
-	// Set a API for this Handler
-	SetAPI(parent api.API)
-	// Initialize and activate the Handler
-	Activate(Implementations, SettingsProvider) error
-	// Rturn a string identifier for the Handler (not functionally needed yet)
+	// Return a string identifier for the Handler (not functionally needed yet)
 	Id() string
+	// Set a API parent for this Builder
+	// This makes some builders capable of depending on others' operations.
+	SetAPI(parent api_api.API)
+	// Initialize and activate the Handler
+	Activate(Implementations, SettingsProvider) api_result.Result
+
+	/*
+	 * API interface
+	 *
+	 * We intentionally duplicate the api.API interface here
+	 */
+
+	// Validate that the API is ready to give operations.
+	Validate() api_result.Result
 	// Return a list of Operations from the Handler
-	Operations() *operation.Operations
-}
-
-// An ordered collection of Builder objects
-type Builders struct {
-	builders map[string]Builder
-	order    []string
-}
-
-// safe intitializer
-func (builders *Builders) safe() {
-	if builders.order == nil {
-		builders.builders = map[string]Builder{}
-		builders.order = []string{}
-	}
-}
-
-// Add a builder
-func (builders *Builders) Add(key string, builder Builder) error {
-	builders.safe()
-	if _, exists := builders.builders[key]; !exists {
-		builders.order = append(builders.order, key)
-	}
-	builders.builders[key] = builder
-	return nil
-}
-
-// Get a single builder
-func (builders *Builders) Get(key string) (Builder, error) {
-	builders.safe()
-	if builder, found := builders.builders[key]; found {
-		return builder, nil
-	} else {
-		return builder, errors.New("No such builder found")
-	}
-}
-
-// Get the builder ordered keys
-func (builders *Builders) Order() []string {
-	builders.safe()
-	return builders.order
-}
-
-// Is the builder list empty
-func (builders *Builders) Empty() bool {
-	return builders.builders == nil
-}
-
-// Return a list of operations from all of the Builders
-func (builders *Builders) Operations() operation.Operations {
-	ops := operation.Operations{}
-	for _, key := range builders.Order() {
-		builder, _ := builders.Get(key)
-		ops.Merge(builder.Operations())
-	}
-	return ops
+	Operations() api_operation.Operations
 }

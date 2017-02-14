@@ -1,5 +1,10 @@
 package orchestrate
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 /**
  * Orchestration DOWN - like docker-compose down
  *
@@ -29,7 +34,12 @@ func (down *BaseOrchestrationDownOperation) Description() string {
 	return "This operation will bring down all containers, volumes and networks related to an application."
 }
 
+// Man page for the operation
+func (down *BaseOrchestrationDownOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (down *BaseOrchestrationDownOperation) Internal() bool {
-	return false
+func (down *BaseOrchestrationDownOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }

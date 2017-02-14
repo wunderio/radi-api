@@ -1,7 +1,8 @@
 package setting
 
 import (
-	"github.com/wunderkraut/radi-api/operation"
+	"github.com/wunderkraut/radi-api/property"
+	"github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -22,7 +23,7 @@ const (
 
 // Property for a single setting key
 type SettingKeyProperty struct {
-	operation.StringProperty
+	property.StringProperty
 }
 
 // Id for the Property
@@ -41,13 +42,13 @@ func (key *SettingKeyProperty) Description() string {
 }
 
 // Is the Property internal only
-func (key *SettingKeyProperty) Internal() bool {
-	return false
+func (key *SettingKeyProperty) Usage() usage.Usage {
+	return property.Usage_Required()
 }
 
 // Property for a single setting scope
 type SettingScopeProperty struct {
-	operation.StringProperty
+	property.StringProperty
 }
 
 // Id for the Property
@@ -66,13 +67,13 @@ func (scope *SettingScopeProperty) Description() string {
 }
 
 // Is the Property internal only
-func (scope *SettingScopeProperty) Internal() bool {
-	return false
+func (scope *SettingScopeProperty) Usage() usage.Usage {
+	return property.Usage_Optional()
 }
 
 // Property for an ordered list of config keys
 type SettingKeysProperty struct {
-	operation.StringSliceProperty
+	property.StringSliceProperty
 }
 
 // Id for the Property
@@ -91,13 +92,13 @@ func (keys *SettingKeysProperty) Description() string {
 }
 
 // Is the Property internal only
-func (keys *SettingKeysProperty) Internal() bool {
-	return false
+func (keys *SettingKeysProperty) Usage() usage.Usage {
+	return property.Usage_ReadOnly()
 }
 
 // Property for a single config value
 type SettingValueProperty struct {
-	operation.BytesArrayProperty
+	property.BytesArrayProperty
 }
 
 // Id for the Property
@@ -116,6 +117,6 @@ func (settingValue *SettingValueProperty) Description() string {
 }
 
 // Is the Property internal only
-func (settingValue *SettingValueProperty) Internal() bool {
-	return false
+func (settingValue *SettingValueProperty) Usage() usage.Usage {
+	return property.Usage_ReadOnly()
 }

@@ -1,4 +1,4 @@
-package operation
+package result
 
 /**
  * This file holds the definition of Result, which is what an operation

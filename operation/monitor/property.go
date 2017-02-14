@@ -1,7 +1,8 @@
 package monitor
 
 import (
-	"github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
+	api_usage "github.com/wunderkraut/radi-api/usage"
 )
 
 const (
@@ -10,7 +11,7 @@ const (
 
 // Configuration for an outputter for monitoring
 type MonitorOutputProperty struct {
-	operation.WriterProperty
+	api_property.WriterProperty
 }
 
 // Id for the configuration
@@ -29,6 +30,6 @@ func (output *MonitorOutputProperty) Description() string {
 }
 
 // Is the Property internal only
-func (output *MonitorOutputProperty) Internal() bool {
-	return false
+func (output *MonitorOutputProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
 }

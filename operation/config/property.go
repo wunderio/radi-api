@@ -3,7 +3,8 @@ package config
 import (
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
+	api_usage "github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -28,7 +29,7 @@ const (
 
 // property for a single config ket
 type ConfigKeyProperty struct {
-	operation.StringProperty
+	api_property.StringProperty
 }
 
 // Id for the property
@@ -47,13 +48,13 @@ func (confKey *ConfigKeyProperty) Description() string {
 }
 
 // Is the Property internal only
-func (confKey *ConfigKeyProperty) Internal() bool {
-	return false
+func (confKey *ConfigKeyProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Required()
 }
 
 // property for an ordered list of config keys
 type ConfigKeysProperty struct {
-	operation.StringSliceProperty
+	api_property.StringSliceProperty
 }
 
 // Id for the property
@@ -63,22 +64,22 @@ func (keyValue *ConfigKeysProperty) Id() string {
 
 // Label for the property
 func (keyValue *ConfigKeysProperty) Label() string {
-	return "property key list."
+	return "Configuration key list."
 }
 
 // Description for the property
 func (keyValue *ConfigKeysProperty) Description() string {
-	return "property key list."
+	return "List of configuration keys."
 }
 
 // Is the Property internal only
-func (keyValue *ConfigKeysProperty) Internal() bool {
-	return false
+func (keyValue *ConfigKeysProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // property for a single config value
 type ConfigValueProperty struct {
-	operation.BytesArrayProperty
+	api_property.BytesArrayProperty
 }
 
 // Id for the property
@@ -88,17 +89,17 @@ func (property *ConfigValueProperty) Id() string {
 
 // Label for the property
 func (property *ConfigValueProperty) Label() string {
-	return "property value."
+	return "Configuration content"
 }
 
 // Description for the property
 func (property *ConfigValueProperty) Description() string {
-	return "property value."
+	return "Content of the configuration"
 }
 
 // Is the Property internal only
-func (property *ConfigValueProperty) Internal() bool {
-	return false
+func (property *ConfigValueProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Internal()
 }
 
 // property for a value as a set of io.Readers
@@ -122,8 +123,8 @@ func (property *ConfigValueScopedReadersProperty) Description() string {
 }
 
 // Is the Property internal only
-func (property *ConfigValueScopedReadersProperty) Internal() bool {
-	return false
+func (property *ConfigValueScopedReadersProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // Give an idea of what type of value the property consumes
@@ -168,8 +169,8 @@ func (property *ConfigValueScopedWritersProperty) Description() string {
 }
 
 // Is the Property internal only
-func (property *ConfigValueScopedWritersProperty) Internal() bool {
-	return false
+func (property *ConfigValueScopedWritersProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // Give an idea of what type of value the property consumes

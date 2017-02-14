@@ -1,10 +1,8 @@
 package config
 
 /**
- * The config wrappers are utility structs used to connect to
- * specific configs as an abstract, so that single connections
- * can provide multiple operations, and can optimize, and
- * make config access safe.
+ * The config wrapper provides an easier way of using config operations
+ * without having to deal with properties and results.
  */
 type ConfigWrapper interface {
 	Get(key string) (ConfigScopedValues, error)
@@ -12,11 +10,13 @@ type ConfigWrapper interface {
 	List(parent string) ([]string, error)
 }
 
+// Some scoped config values kept in order of scope
 type ConfigScopedValues struct {
 	configMap map[string]ConfigScopedValue
 	order     []string
 }
 
+// An individual scoped config value
 type ConfigScopedValue []byte
 
 // Save JIT initializer
@@ -36,7 +36,7 @@ func (values *ConfigScopedValues) Get(key string) (ConfigScopedValue, bool) {
 }
 
 // Add a FileSource to the set
-func (values *ConfigScopedValues) Add(key string, source ConfigScopedValue) {
+func (values *ConfigScopedValues) Set(key string, source ConfigScopedValue) {
 	values.safe()
 
 	if _, found := values.configMap[key]; !found {

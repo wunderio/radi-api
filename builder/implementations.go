@@ -1,21 +1,20 @@
 package builder
 
 /**
- * Implementations are string identifiers or gorups of
- * operations, which will likely always relate to
- * the api/operations (but not strictly necessary)
+ * Implementations are string identifiers or gorups of operations, which will
+ * likely always relate to the api/operations (but not strictly necessary)
  */
+
+// A list of which implementations should be included.
+type Implementations struct {
+	implementations []string
+}
 
 // Constructor for Implementations
 func New_Implementations(implementations []string) *Implementations {
 	return &Implementations{
 		implementations: implementations,
 	}
-}
-
-// A list of which implementations should be included.
-type Implementations struct {
-	implementations []string
 }
 
 // Provides the implementations as an ordered string list

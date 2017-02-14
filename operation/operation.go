@@ -1,5 +1,11 @@
 package operation
 
+import (
+	"github.com/wunderkraut/radi-api/property"
+	"github.com/wunderkraut/radi-api/result"
+	"github.com/wunderkraut/radi-api/usage"
+)
+
 /**
  * This file holds the definition for an API Operation, and
  * also defines a usefull Operation list struct, as well as
@@ -18,76 +24,20 @@ type Operation interface {
 	Label() string
 	// return a multiline string description for the Operation
 	Description() string
+	// return a multiline string description for the Operation
+	Help() string
 
-	// Is this operation meant to be used only inside the API
-	Internal() bool
+	// In what ways is this operation meant to be used
+	Usage() usage.Usage
 
 	// FUNCTIONAL
 
 	// Run a validation check on the Operation
-	Validate() bool
+	Validate() result.Result
 
 	// What settings/values does the Operation provide to an implemenentor
-	Properties() Properties
+	Properties() property.Properties
 
 	// Execute the Operation
-	Exec(*Properties) Result
-
-	/**
-
-	// OPERATIONAL
-
-	Exec()
-
-	// Operational status of the operation
-	Status() (chan int)
-
-	// Trigger for operation failure
-	Fail() (chan bool)
-
-	// Error list
-	Errors() []error
-
-	*/
-}
-
-// Operations are a keyed map of individual Operations
-type Operations struct {
-	opMap map[string]Operation
-	order []string
-}
-
-// Add a new Operation to the map
-func (operations *Operations) Add(add Operation) bool {
-	if operations.opMap == nil {
-		operations.opMap = map[string]Operation{}
-		operations.order = []string{}
-	}
-	addId := add.Id()
-	operations.opMap[addId] = add
-	operations.order = append(operations.order, addId)
-	return true
-}
-
-// Merge one Operations set into the current set
-func (operations *Operations) Merge(merge *Operations) {
-	for _, operation := range merge.Order() {
-		mergeOperation, _ := merge.Get(operation)
-		operations.Add(mergeOperation)
-	}
-}
-
-// Operation accessor by id
-func (operations *Operations) Get(id string) (Operation, bool) {
-	if operations.opMap != nil {
-		operation, ok := operations.opMap[id]
-		return operation, ok
-	} else {
-		return nil, false
-	}
-}
-
-// Order returns a slice of operation ids, used in iterators to maintain an operation order
-func (operations *Operations) Order() []string {
-	return operations.order
+	Exec(property.Properties) result.Result
 }

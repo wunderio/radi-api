@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
 )
 
 /**
@@ -12,64 +12,62 @@ import (
 type BaseCommandKeyCommandOperation struct{}
 
 // Return a static keys list Property
-func (base *BaseCommandKeyCommandOperation) Properties() operation.Properties {
-	props := operation.Properties{}
+func (base *BaseCommandKeyCommandOperation) Properties() api_property.Properties {
+	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add(operation.Property(&CommandKeyProperty{}))
-	props.Add(operation.Property(&CommandCommandProperty{}))
+	props.Add((&CommandKeyProperty{}).Property())
+	props.Add((&CommandCommandProperty{}).Property())
 
-	return props
+	return props.Properties()
 }
 
 // A Base command operation that returns a list of keys
 type BaseCommandKeyKeysOperation struct{}
 
 // Return a static keys list Property
-func (base *BaseCommandKeyKeysOperation) Properties() operation.Properties {
-	props := operation.Properties{}
+func (base *BaseCommandKeyKeysOperation) Properties() api_property.Properties {
+	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add(operation.Property(&CommandKeyProperty{}))
-	props.Add(operation.Property(&CommandKeysProperty{}))
+	props.Add((&CommandKeyProperty{}).Property())
+	props.Add((&CommandKeysProperty{}).Property())
 
-	return props
+	return props.Properties()
 }
 
 // A base command operation that provides a a key, flags strings, and various input and output Properties
 type BaseCommandContextOperation struct{}
 
 // get static Properties
-func (base *BaseCommandContextOperation) Properties() operation.Properties {
-	props := operation.Properties{}
+func (base *BaseCommandContextOperation) Properties() api_property.Properties {
+	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add(operation.Property(&CommandContextProperty{}))
+	props.Add((&CommandContextProperty{}).Property())
 
-	return props
+	return props.Properties()
 }
 
 // A base command operation that provides a a key, flags strings, and various input and output Properties
 type BaseCommandInputOutputOperation struct{}
 
 // get static Properties
-func (base *BaseCommandInputOutputOperation) Properties() operation.Properties {
-	props := operation.Properties{}
+func (base *BaseCommandInputOutputOperation) Properties() api_property.Properties {
+	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add(operation.Property(&CommandInputProperty{}))
-	props.Add(operation.Property(&CommandOutputProperty{}))
-	props.Add(operation.Property(&CommandErrorProperty{}))
+	props.Add((&CommandInputProperty{}).Property())
+	props.Add((&CommandOutputProperty{}).Property())
+	props.Add((&CommandErrorProperty{}).Property())
 
-	return props
+	return props.Properties()
 }
 
 // A base command operation that provides akey, flags
-type BaseCommandFlagsOperation struct {
-	properties *operation.Properties
-}
+type BaseCommandFlagsOperation struct{}
 
 // get static Properties
-func (base *BaseCommandFlagsOperation) Properties() operation.Properties {
-	props := operation.Properties{}
+func (base *BaseCommandFlagsOperation) Properties() api_property.Properties {
+	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add(operation.Property(&CommandFlagsProperty{}))
+	props.Add((&CommandFlagsProperty{}).Property())
 
-	return props
+	return props.Properties()
 }

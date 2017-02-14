@@ -1,5 +1,10 @@
 package project
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 const (
 	OPERATION_ID_PROJECT_CREATE = "project.create"
 )
@@ -26,7 +31,12 @@ func (create *ProjectCreateOperation) Description() string {
 	return "Create a new project from a templating source."
 }
 
+// Man page for the operation
+func (create *ProjectCreateOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (create *ProjectCreateOperation) Internal() bool {
-	return false
+func (create *ProjectCreateOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }

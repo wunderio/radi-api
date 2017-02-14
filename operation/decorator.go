@@ -2,6 +2,10 @@ package operation
 
 import (
 	"errors"
+
+	"github.com/wunderkraut/radi-api/property"
+	"github.com/wunderkraut/radi-api/result"
+	"github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -28,53 +32,76 @@ type DecoratedOperation struct {
 }
 
 // Get decorted operation id
-func (operation *DecoratedOperation) Id() string {
-	return operation.decorated.Id()
+func (decOp *DecoratedOperation) Id() string {
+	return decOp.decorated.Id()
 }
 
 // Get decorted operation label
-func (operation *DecoratedOperation) Label() string {
-	return operation.decorated.Label() + " [" + operation.decorating.Label() + "]"
+func (decOp *DecoratedOperation) Label() string {
+	return decOp.decorated.Label() + " [" + decOp.decorating.Label() + "]"
 }
 
 // return a multiline string description for the Operation
-func (operation *DecoratedOperation) Description() string {
-	return operation.decorated.Description() + " [" + operation.decorating.Description() + "]"
+func (decOp *DecoratedOperation) Description() string {
+	return decOp.decorated.Description() + " [" + decOp.decorating.Description() + "]"
+}
+
+// return a man type help for the Operation
+func (decOp *DecoratedOperation) Help() string {
+	return decOp.decorated.Help()
 }
 
 // Is this operation meant to be used only inside the API
-func (operation *DecoratedOperation) Internal() bool {
-	return operation.decorated.Internal()
+func (decOp *DecoratedOperation) Usage() usage.Usage {
+	combUsage := usage.New_SimpleMapUsageEmpty()
+
+	combUsage.Merge(decOp.decorated.Usage())
+	combUsage.Merge(decOp.decorating.Usage())
+
+	return combUsage.Usage()
 }
 
 // Run a validation check on the Operation
-func (operation *DecoratedOperation) Validate() bool {
-	return operation.decorating.Validate() && operation.decorated.Validate()
+func (decOp *DecoratedOperation) Validate() result.Result {
+	/**
+	 * @TODO developer a result type for merging, and use it here
+	 */
+	return decOp.decorating.Validate()
 }
 
 // Get Operation Properties from both operations
-func (operation *DecoratedOperation) Properties() Properties {
-	Properties := operation.decorated.Properties()
-	Properties.Merge(operation.decorating.Properties())
-	return Properties
+func (decOp *DecoratedOperation) Properties() property.Properties {
+	props := property.New_SimplePropertiesEmpty()
+
+	props.Merge(decOp.decorated.Properties())
+	props.Merge(decOp.decorating.Properties())
+
+	return props.Properties()
 }
 
 // Execute the decorating operation, and then execute the decorated operation if the decorating was successful
-func (operation *DecoratedOperation) Exec(props *Properties) Result {
-	result := operation.decorating.Exec(props)
-	<-result.Finished()
+func (decOp *DecoratedOperation) Exec(props property.Properties) result.Result {
+	res := result.New_StandardResult()
 
-	if !result.Success() {
-		return result
+	decRes := decOp.decorating.Exec(props)
+	<-decRes.Finished()
+
+	res.Merge(decRes)
+
+	if !res.Success() {
+		return res.Result()
 	}
 
-	return operation.decorated.Exec(props)
+	execResult := decOp.decorated.Exec(props)
+	res.Merge(execResult)
+
+	return res.Result()
 }
 
 /**
  * This extension to the decorator evaluates the decorated operation
  * only if a targeted bool property on the decorating operation is
- * true after execution.
+ * true after that op is executed.
  */
 
 // A constructor for DecoratedBooleanPropertyBasedOperation
@@ -96,32 +123,32 @@ type DecoratedBooleanPropertyBasedOperation struct {
 }
 
 // Execute the decorating operation, and then execute the decorated operation if the decorator property is true
-func (operation *DecoratedBooleanPropertyBasedOperation) Exec(props *Properties) Result {
+func (decOp *DecoratedBooleanPropertyBasedOperation) Exec(props property.Properties) result.Result {
 	boolValue := false
-	result := New_StandardResult()
+	res := result.New_StandardResult()
 
-	decoratingResult := operation.decorating.Exec(props)
+	decoratingResult := decOp.decorating.Exec(props)
 	<-decoratingResult.Finished()
 
 	if decoratingResult.Success() {
-		props := operation.decorating.Properties()
-		if boolProp, found := props.Get(operation.property); !found {
-			result.AddError(errors.New("Decorator operation did not have the targeted property"))
-			result.MarkFailed()
+		props := decOp.decorating.Properties()
+		if boolProp, found := props.Get(decOp.property); !found {
+			res.AddError(errors.New("Decorator operation did not have the targeted property"))
+			res.MarkFailed()
 		} else if boolProp.Type() != "bool" {
-			result.AddError(errors.New("Decorator operation targeted property was not a boolean [" + operation.property + ":" + boolProp.Type() + "]"))
-			result.MarkFailed()
+			res.AddError(errors.New("Decorator operation targeted property was not a boolean [" + decOp.property + ":" + boolProp.Type() + "]"))
+			res.MarkFailed()
 		} else {
 			boolValue = boolProp.Get().(bool)
 			if !boolValue {
-				result.MarkFailed()
+				res.MarkFailed()
 			}
 		}
 	}
 
-	if result.Success() && boolValue {
-		return operation.decorated.Exec(props)
-	} else {
-		return Result(result)
+	if res.Success() && boolValue {
+		res.Merge(decOp.decorated.Exec(props))
 	}
+
+	return res.Result()
 }

@@ -5,7 +5,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
 )
 
 // A handler base that writes to an outputter
@@ -28,10 +28,10 @@ func (op *MonitorBaseWriterOperation) WriteMessage(message string) bool {
 }
 
 // Add a writer configuration
-func (op *MonitorBaseWriterOperation) Properties() operation.Properties {
-	configurations := operation.Properties{}
+func (op *MonitorBaseWriterOperation) Properties() api_property.Properties {
+	props := api_property.New_SimplePropertiesEmpty()
 
-	configurations.Add(operation.Property(&MonitorOutputProperty{}))
+	props.Add(api_property.Property(&MonitorOutputProperty{}))
 
-	return configurations
+	return props.Properties()
 }

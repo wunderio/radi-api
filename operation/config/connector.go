@@ -1,9 +1,24 @@
 package config
 
+/**
+ * The config connector is an interface that allows any implementation
+ * to provide full config operations, by providing the interface, and
+ * then using the connector operations.
+ *
+ * The connector is not a wrapper
+ *   - the wrapper wraps around multiple  operations to provide easy to use
+ *     functions
+ *   - the connector provbides easy to use methods from which to create multiple
+ *     operations
+ */
+
 // Provide a Connector to Config sources
 type ConfigConnector interface {
+	// Get scoped key readers for a particular config key
 	Readers(key string) ScopedReaders
+	// Get scoped key writers for a particular config key
 	Writers(key string) ScopedWriters
+	// List all possible config keys, across all scopes
 	List() []string
 }
 

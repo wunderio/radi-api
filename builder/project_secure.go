@@ -6,17 +6,17 @@ import (
 	"github.com/wunderkraut/radi-api/api"
 	"github.com/wunderkraut/radi-api/operation"
 	"github.com/wunderkraut/radi-api/operation/security"
+	"github.com/wunderkraut/radi-api/result"
 )
 
 /**
  * SecureProject
  *
- * An API Project that implements a security layer
- * on top of the standard project.
+ * An API Project that implements a security layer on top of the standard
+ * project.
  *
- * The security layer is implemented by adding authorization
- * on top of most operations, using authorize and user
- * operations to implement that.
+ * The security layer is implemented by adding authorization on top of most
+ * operations, using authorize and user operations to implement that.
  */
 type SecureProject struct {
 	StandardProject
@@ -34,14 +34,22 @@ func (project *SecureProject) Project() Project {
 	return Project(project)
 }
 
-// Convert his project to an API implementation
+// Convert his project to an API interface
 func (project *SecureProject) API() api.API {
 	return api.API(project)
 }
 
 // Ask a SecureProject to validate itself, after it has been fully activated, before we ask for operations.
-func (project *SecureProject) Validate() operation.Result {
-	result := operation.New_StandardResult()
+func (project *SecureProject) Validate() result.Result {
+	res := result.New_StandardResult()
+
+	parentRes := project.StandardProject.Validate()
+	<-parentRes.Finished()
+
+	if !parentRes.Success() {
+		return parentRes
+	}
+	res.Merge(parentRes)
 
 	// Build all of the actual operations, which we will then decorate
 	builderOps := project.StandardProject.Operations()
@@ -54,20 +62,20 @@ func (project *SecureProject) Validate() operation.Result {
 	 */
 
 	if _, found := builderOps.Get(security.OPERATION_KEY_SECURITY_AUTHORIZE_OPERATION); !found {
-		result.AddError(errors.New("Secure Builder API desn't have access to any security Authorization operation."))
-		result.MarkFailed()
+		res.AddError(errors.New("Secure Builder API desn't have access to any security Authorization operation."))
+		res.MarkFailed()
 	} else {
-		result.MarkSuccess()
+		res.MarkSuccess()
 	}
-	result.MarkFinished()
+	res.MarkFinished()
 
-	return result.Result()
+	return res.Result()
 }
 
 // Return operations where each operation is decorated with the authorize operation
 // Return a list of operations for the Project from all of the activated Builders
 func (project *SecureProject) Operations() operation.Operations {
-	ops := operation.Operations{}
+	ops := operation.New_SimpleOperations()
 
 	// Build all of the actual operations, which we will then decorate
 	builderOps := project.StandardProject.Operations()
@@ -94,5 +102,5 @@ func (project *SecureProject) Operations() operation.Operations {
 
 	}
 
-	return ops
+	return ops.Operations()
 }

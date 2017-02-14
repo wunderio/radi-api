@@ -4,6 +4,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 
 	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
+	api_usage "github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -20,7 +22,7 @@ const (
 
 // A boolean property for if an authentication succeeded
 type SecurityAuthenticationSucceededProperty struct {
-	api_operation.BooleanProperty
+	api_property.BooleanProperty
 }
 
 // ID returns string unique property Identifier
@@ -39,13 +41,13 @@ func (authSuccessProp *SecurityAuthenticationSucceededProperty) Description() st
 }
 
 // Mark a property as being for internal use only (no shown to users)
-func (authSuccessProp *SecurityAuthenticationSucceededProperty) Internal() bool {
-	return true
+func (authSuccessProp *SecurityAuthenticationSucceededProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // A boolean property for if an authorization succeeded (was granted)
 type SecurityAuthorizationSucceededProperty struct {
-	api_operation.BooleanProperty
+	api_property.BooleanProperty
 }
 
 // ID returns string unique property Identifier
@@ -64,8 +66,8 @@ func (authSuccessProp *SecurityAuthorizationSucceededProperty) Description() str
 }
 
 // Mark a property as being for internal use only (no shown to users)
-func (authSuccessProp *SecurityAuthorizationSucceededProperty) Internal() bool {
-	return true
+func (authSuccessProp *SecurityAuthorizationSucceededProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // An Operation property
@@ -89,8 +91,8 @@ func (operationProp *SecurityAuthorizationOperationProperty) Description() strin
 }
 
 // Mark a property as being for internal use only (no shown to users)
-func (operationProp *SecurityAuthorizationOperationProperty) Internal() bool {
-	return true
+func (operationProp *SecurityAuthorizationOperationProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Internal()
 }
 
 // An Operation property
@@ -114,8 +116,8 @@ func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Description() str
 }
 
 // Mark a property as being for internal use only (no shown to users)
-func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Internal() bool {
-	return true
+func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Internal()
 }
 
 // Give an idea of what type of value the property consumes
@@ -158,8 +160,8 @@ func (userProp *SecurityUserProperty) Description() string {
 }
 
 // Mark a property as being for internal use only (no shown to users)
-func (userProp *SecurityUserProperty) Internal() bool {
-	return true
+func (userProp *SecurityUserProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // Give an idea of what type of value the property consumes

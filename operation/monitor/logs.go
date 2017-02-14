@@ -1,5 +1,10 @@
 package monitor
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 /**
  * The logs monitor operations is about providing a serial
  * log output response attached to a writer.  There are no
@@ -31,7 +36,12 @@ func (logs *BaseMonitorLogsOperation) Description() string {
 	return "Logging output information."
 }
 
+// Man page for the operation
+func (logs *BaseMonitorLogsOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (logs *BaseMonitorLogsOperation) Internal() bool {
-	return false
+func (logs *BaseMonitorLogsOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }

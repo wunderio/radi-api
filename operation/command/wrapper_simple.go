@@ -3,25 +3,27 @@ package command
 import (
 	"errors"
 
-	// log "github.com/Sirupsen/logrus"
-
-	"github.com/wunderkraut/radi-api/operation"
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
 )
 
-func New_SimpleCommandWrapper(operations *operation.Operations) *SimpleCommandWrapper {
+// A simple implementation of a CommandWrapper
+type SimpleCommandWrapper struct {
+	operations api_operation.Operations
+}
+
+// Constructor for SimpleCommandWrapper
+func New_SimpleCommandWrapper(operations api_operation.Operations) *SimpleCommandWrapper {
 	return &SimpleCommandWrapper{
 		operations: operations,
 	}
 }
 
-type SimpleCommandWrapper struct {
-	operations *operation.Operations
-}
-
+// Retrieve a command that matches a key
 func (wrapper *SimpleCommandWrapper) Get(key string) (Command, error) {
 	var found bool
-	var op operation.Operation
-	var keyProp, commandProp operation.Property
+	var op api_operation.Operation
+	var keyProp, commandProp api_property.Property
 
 	var comm Command
 
@@ -43,7 +45,7 @@ func (wrapper *SimpleCommandWrapper) Get(key string) (Command, error) {
 		return comm, errors.New("No command property available in Get operation in Command Wrapper")
 	}
 
-	result := op.Exec(&props)
+	result := op.Exec(props)
 	<-result.Finished()
 
 	if !result.Success() {
@@ -60,10 +62,11 @@ func (wrapper *SimpleCommandWrapper) Get(key string) (Command, error) {
 	return comm, nil
 }
 
+// List all of the command keys available
 func (wrapper *SimpleCommandWrapper) List(parent string) ([]string, error) {
 	var found bool
-	var op operation.Operation
-	var keyProp, keysProp operation.Property
+	var op api_operation.Operation
+	var keyProp, keysProp api_property.Property
 
 	list := []string{}
 
@@ -85,7 +88,7 @@ func (wrapper *SimpleCommandWrapper) List(parent string) ([]string, error) {
 		return list, errors.New("No keys property available in Command Wrapper")
 	}
 
-	result := op.Exec(&props)
+	result := op.Exec(props)
 	<-result.Finished()
 
 	if !result.Success() {

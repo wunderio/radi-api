@@ -1,4 +1,12 @@
-package operation
+package result
+
+// Make a successfully finished result with no message and no properties
+func MakeSuccessfulResult() Result {
+	res := New_StandardResult()
+	res.MarkSuccess()
+	res.MarkFinished()
+	return res.Result()
+}
 
 // StandardResult is a base class for results which keep success boolean and errors slice as variables
 type StandardResult struct {
@@ -14,6 +22,11 @@ func New_StandardResult() *StandardResult {
 		success:  true, // results default to success, to prevent silly issues.
 		errors:   []error{},
 	}
+}
+
+// Return this struct as a Result interfacew
+func (base *StandardResult) Result() Result {
+	return Result(base)
 }
 
 // Mark the result operation as finihsed [non blocking]
@@ -67,9 +80,4 @@ func (base *StandardResult) Merge(merge Result) {
 		base.MarkFailed()
 	}
 	base.AddErrors(merge.Errors())
-}
-
-// Return this struct as a Result interfacew
-func (base *StandardResult) Result() Result {
-	return Result(base)
 }

@@ -1,5 +1,10 @@
 package provision
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 /**
  * Bring up the machines related to the project
  */
@@ -26,7 +31,12 @@ func (up *BaseProvisionUpOperation) Description() string {
 	return "Provision machine elements needed for the project."
 }
 
+// Man page for the operation
+func (up *BaseProvisionUpOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (up *BaseProvisionUpOperation) Internal() bool {
-	return false
+func (up *BaseProvisionUpOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }
