@@ -8,18 +8,39 @@ import (
 
 /**
  * An ordered list of builders
- *
- * @TODO should this be an interface
  */
 
-// An ordered collection of Builder objects
-type Builders struct {
+type Builders interface {
+	// Add a builder
+	Add(key string, builder Builder) error
+	// Get a single builder
+	Get(key string) (Builder, error)
+	// Get the builder ordered keys
+	Order() []string
+	// Is the builder list empty
+	Empty() bool
+	// Return a list of operations from all of the Builders
+	Operations() api_operation.Operations
+}
+
+// A simple ordered collection of Builder objects
+type SimpleBuilders struct {
 	builders map[string]Builder
 	order    []string
 }
 
+// Constructor for SimpleBuilders
+func New_SimpleBuilders() *SimpleBuilders {
+	return &SimpleBuilders{}
+}
+
+// convert this to a Builders interface
+func (builders *SimpleBuilders) Builders() Builders {
+	return Builders(builders)
+}
+
 // safe intitializer
-func (builders *Builders) safe() {
+func (builders *SimpleBuilders) safe() {
 	if builders.order == nil {
 		builders.builders = map[string]Builder{}
 		builders.order = []string{}
@@ -27,7 +48,7 @@ func (builders *Builders) safe() {
 }
 
 // Add a builder
-func (builders *Builders) Add(key string, builder Builder) error {
+func (builders *SimpleBuilders) Add(key string, builder Builder) error {
 	builders.safe()
 	if _, exists := builders.builders[key]; !exists {
 		builders.order = append(builders.order, key)
@@ -37,7 +58,7 @@ func (builders *Builders) Add(key string, builder Builder) error {
 }
 
 // Get a single builder
-func (builders *Builders) Get(key string) (Builder, error) {
+func (builders *SimpleBuilders) Get(key string) (Builder, error) {
 	builders.safe()
 	if builder, found := builders.builders[key]; found {
 		return builder, nil
@@ -47,18 +68,18 @@ func (builders *Builders) Get(key string) (Builder, error) {
 }
 
 // Get the builder ordered keys
-func (builders *Builders) Order() []string {
+func (builders *SimpleBuilders) Order() []string {
 	builders.safe()
 	return builders.order
 }
 
 // Is the builder list empty
-func (builders *Builders) Empty() bool {
+func (builders *SimpleBuilders) Empty() bool {
 	return builders.builders == nil
 }
 
 // Return a list of operations from all of the Builders
-func (builders *Builders) Operations() api_operation.Operations {
+func (builders *SimpleBuilders) Operations() api_operation.Operations {
 	ops := api_operation.New_SimpleOperations()
 	for _, key := range builders.Order() {
 		builder, _ := builders.Get(key)

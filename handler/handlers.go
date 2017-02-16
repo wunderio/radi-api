@@ -8,18 +8,37 @@ import (
 
 /**
  * An ordered collection of Handler objects
- *
- * @TODO should this be an interface?
  */
 
+type Handlers interface {
+	// Add a new handler to the list
+	Add(hand Handler) error
+	// Get a single handler
+	Get(key string) (Handler, error)
+	// Get the handler ordered keys
+	Order() []string
+	// Return a list of operations from all of the Handlers
+	Operations() api_operation.Operations
+}
+
 // Ordered list of handlers
-type Handlers struct {
+type SimpleHandlers struct {
 	handlers map[string]Handler
 	order    []string
 }
 
+// Constructor for SimpleHandlers
+func New_SimpleHandlers() *SimpleHandlers {
+	return &SimpleHandlers{}
+}
+
+// Convert this SimpleHandlers to a Handlers interface
+func (handlers *SimpleHandlers) Handlers() Handlers {
+	return Handlers(handlers)
+}
+
 // safe intitializer
-func (handlers *Handlers) safe() {
+func (handlers *SimpleHandlers) safe() {
 	if handlers.order == nil {
 		handlers.handlers = map[string]Handler{}
 		handlers.order = []string{}
@@ -27,7 +46,7 @@ func (handlers *Handlers) safe() {
 }
 
 // Add a handler
-func (handlers *Handlers) Add(hand Handler) error {
+func (handlers *SimpleHandlers) Add(hand Handler) error {
 	key := hand.Id()
 	handlers.safe()
 	if _, exists := handlers.handlers[key]; !exists {
@@ -38,7 +57,7 @@ func (handlers *Handlers) Add(hand Handler) error {
 }
 
 // Get a single handler
-func (handlers *Handlers) Get(key string) (Handler, error) {
+func (handlers *SimpleHandlers) Get(key string) (Handler, error) {
 	handlers.safe()
 	if hand, found := handlers.handlers[key]; found {
 		return hand, nil
@@ -48,13 +67,13 @@ func (handlers *Handlers) Get(key string) (Handler, error) {
 }
 
 // Get the handler ordered keys
-func (handlers *Handlers) Order() []string {
+func (handlers *SimpleHandlers) Order() []string {
 	handlers.safe()
 	return handlers.order
 }
 
 // Return a list of operations from all of the Handlers
-func (handlers *Handlers) Operations() api_operation.Operations {
+func (handlers *SimpleHandlers) Operations() api_operation.Operations {
 	ops := api_operation.New_SimpleOperations()
 	for _, key := range handlers.Order() {
 		hand, _ := handlers.Get(key)

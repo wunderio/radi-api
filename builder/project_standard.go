@@ -20,7 +20,7 @@ type StandardProject struct {
 // Constructor for StandardProject
 func New_StandardProject() *StandardProject {
 	return &StandardProject{
-		builders: Builders{},
+		builders: New_SimpleBuilders().Builders(),
 	}
 }
 
