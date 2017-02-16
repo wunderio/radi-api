@@ -39,7 +39,7 @@ func (set *BaseSettingSetOperation) Help() string {
 
 // Is this an internal API operation
 func (set *BaseSettingSetOperation) Usage() api_usage.Usage {
-	return api_operation.Usage_External()
+	return api_operation.Usage_Internal()
 }
 
 func (set *BaseSettingSetOperation) Properties() api_property.Properties {

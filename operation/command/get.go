@@ -42,5 +42,5 @@ func (get *BaseCommandGetOperation) Help() string {
 
 // Is this an internal API operation
 func (get *BaseCommandGetOperation) Usage() api_usage.Usage {
-	return api_operation.Usage_External()
+	return api_operation.Usage_Internal()
 }

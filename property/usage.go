@@ -118,6 +118,11 @@ func IsUsage_Required(usage api_usage.Usage) bool {
 }
 
 // Is this an external required field
+func IsUsage_External(usage api_usage.Usage) bool {
+	return usage.Has(USAGE_EXTERNAL_WRITE_BEFOREEXEC) && usage.Has(USAGE_EXTERNAL_READ_BEFOREEXEC)
+}
+
+// Is this an external required field
 func IsUsage_ExternalRequired(usage api_usage.Usage) bool {
 	return usage.Has(USAGE_EXTERNAL_WRITE_BEFOREEXEC) && usage.Has(USAGE_EXTERNAL_REQUIRED)
 }

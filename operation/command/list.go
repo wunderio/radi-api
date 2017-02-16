@@ -39,5 +39,5 @@ func (list *BaseCommandListOperation) Help() string {
 
 // Is this an internal API operation
 func (list *BaseCommandListOperation) Usage() api_usage.Usage {
-	return api_operation.Usage_External()
+	return api_operation.Usage_Internal()
 }

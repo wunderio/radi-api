@@ -23,7 +23,7 @@ func Usage_Default() api_usage.Usage {
 // Make a usage map for marking a propert as internally usable only.
 func Usage_Internal() api_usage.Usage {
 	return api_usage.MakeUsageFromMap(map[string]bool{
-		USAGE_EXTERNAL_EXEC: true,
+		USAGE_EXTERNAL_EXEC: false,
 	})
 }
 

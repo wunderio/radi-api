@@ -38,8 +38,8 @@ func (list *BaseSettingListOperation) Help() string {
 }
 
 // Is this an internal API operation
-func (list *BaseSettingListOperation) usage() api_usage.Usage {
-	return api_operation.Usage_External()
+func (list *BaseSettingListOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_Internal()
 }
 
 // Provide properties

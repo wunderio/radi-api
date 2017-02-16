@@ -39,7 +39,7 @@ func (get *BaseSettingGetOperation) Help() string {
 
 // Return External usage
 func (get *BaseSettingGetOperation) Usage() api_usage.Usage {
-	return api_operation.Usage_External()
+	return api_operation.Usage_Internal()
 }
 
 // Return properties for the operation

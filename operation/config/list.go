@@ -39,7 +39,7 @@ func (list *BaseConfigListOperation) Help() string {
 
 // Is this an internal API operation
 func (list *BaseConfigListOperation) Usage() api_usage.Usage {
-	return api_operation.Usage_External()
+	return api_operation.Usage_Internal()
 }
 
 // Return Operation properties
