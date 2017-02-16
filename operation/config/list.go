@@ -47,6 +47,10 @@ func (list *BaseConfigListOperation) Properties() api_property.Properties {
 	props := api_property.New_SimplePropertiesEmpty()
 
 	props.Add(api_property.New_UsageDecoratedProperty(
+		api_property.Property(&ConfigKeyProperty{}),
+		api_property.Usage_ReadOnly(),
+	))
+	props.Add(api_property.New_UsageDecoratedProperty(
 		api_property.Property(&ConfigKeysProperty{}),
 		api_property.Usage_ReadOnly(),
 	))
