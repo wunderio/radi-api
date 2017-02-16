@@ -1,5 +1,11 @@
 package setting
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 const (
 	OPERATION_ID_SETTING_LIST = "setting.list"
 )
@@ -9,9 +15,7 @@ const (
  */
 
 // Base class for config list Operation
-type BaseSettingListOperation struct {
-	BaseSettingKeyScopeKeysOperation
-}
+type BaseSettingListOperation struct{}
 
 // Id the operation
 func (list *BaseSettingListOperation) Id() string {
@@ -28,7 +32,32 @@ func (list *BaseSettingListOperation) Description() string {
 	return "Retrieve a list of available configuration keys."
 }
 
+// Man page for the operation
+func (list *BaseSettingListOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (list *BaseSettingListOperation) Internal() bool {
-	return false
+func (list *BaseSettingListOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_Internal()
+}
+
+// Provide properties
+func (list *BaseSettingListOperation) Properties() api_property.Properties {
+	props := api_property.New_SimplePropertiesEmpty()
+
+	props.Add(api_property.New_UsageDecoratedProperty(
+		api_property.Property(&SettingKeyProperty{}),
+		api_property.Usage_Optional(),
+	))
+	props.Add(api_property.New_UsageDecoratedProperty(
+		api_property.Property(&SettingScopeProperty{}),
+		api_property.Usage_Optional(),
+	))
+	props.Add(api_property.New_UsageDecoratedProperty(
+		api_property.Property(&SettingKeysProperty{}),
+		api_property.Usage_ReadOnly(),
+	))
+
+	return props.Properties()
 }

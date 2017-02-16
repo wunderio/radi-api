@@ -1,5 +1,10 @@
 package project
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 const (
 	OPERATION_ID_PROJECT_INIT = "project.init"
 )
@@ -26,7 +31,12 @@ func (create *ProjectInitOperation) Description() string {
 	return "Initialize current project as a radi project, by adding radi configuration files."
 }
 
+// Man page for the operation
+func (create *ProjectInitOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (create *ProjectInitOperation) Internal() bool {
-	return false
+func (create *ProjectInitOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }

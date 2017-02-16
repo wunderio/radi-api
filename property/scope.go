@@ -1,4 +1,4 @@
-package operation
+package property
 
 /**
  * A wrapper for a value, where the value could come from,

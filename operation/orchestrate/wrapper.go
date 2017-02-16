@@ -7,6 +7,8 @@ package orchestrate
  * @NOTE this is heavily tied to docker syntax at the moment,
  * only in order to get a manageable interface, not because it
  * is any good.  We should consider dumping this if it makes sense.
+ *
+ * @TODO The orchestrate wrapper definition is behind on available ops
  */
 
 // A wrapper on orchestrate operations to make them easier to use

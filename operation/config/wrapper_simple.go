@@ -6,7 +6,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/wunderkraut/radi-api/operation"
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
 )
 
 /**
@@ -14,26 +15,26 @@ import (
  *
  * @NOTE this is currently a blocking inline process, which would stall
  *   if the backend operations timeout.  A thread-safe implementation should
- *   be written, but we should see it in operation before we do that.
+ *   be written, but we should see this one in operation before we do that.
  *
  * @TODO Make this much more intelligent, right now it is just a quick operator
  */
 
 // Constructor for SimpleConfigWrapper
-func New_SimpleConfigWrapper(operations *operation.Operations) *SimpleConfigWrapper {
+func New_SimpleConfigWrapper(operations api_operation.Operations) *SimpleConfigWrapper {
 	return &SimpleConfigWrapper{operations: operations}
 }
 
 // Simple config wrapper
 type SimpleConfigWrapper struct {
-	operations *operation.Operations
+	operations api_operation.Operations
 }
 
 // Perform the Get Operation
 func (wrapper *SimpleConfigWrapper) Get(key string) (ConfigScopedValues, error) {
 	var found bool
-	var op operation.Operation
-	var keyProp, readersProp operation.Property
+	var op api_operation.Operation
+	var keyProp, readersProp api_property.Property
 
 	values := ConfigScopedValues{}
 
@@ -56,7 +57,7 @@ func (wrapper *SimpleConfigWrapper) Get(key string) (ConfigScopedValues, error) 
 	}
 
 	// Execute the wrapped operation, and wait for it to finish
-	result := op.Exec(&props)
+	result := op.Exec(props)
 	<-result.Finished()
 
 	if !result.Success() {
@@ -71,7 +72,7 @@ func (wrapper *SimpleConfigWrapper) Get(key string) (ConfigScopedValues, error) 
 	for _, scope := range readers.Order() {
 		reader, _ := readers.Get(scope)
 		if contents, err := ioutil.ReadAll(reader); err == nil {
-			values.Add(scope, ConfigScopedValue(contents))
+			values.Set(scope, ConfigScopedValue(contents))
 		}
 	}
 	return values, nil
@@ -80,8 +81,8 @@ func (wrapper *SimpleConfigWrapper) Get(key string) (ConfigScopedValues, error) 
 // Perform the Set Operation
 func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) error {
 	var found bool
-	var op operation.Operation
-	var keyProp, writersProp operation.Property
+	var op api_operation.Operation
+	var keyProp, writersProp api_property.Property
 
 	if op, found = wrapper.operations.Get(OPERATION_ID_CONFIG_WRITERS); !found {
 		return errors.New("No get operation available in Config Simple Wrapper")
@@ -102,7 +103,7 @@ func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) e
 	}
 
 	// Execute the wrapped operation, and wait for it to finish
-	result := op.Exec(&props)
+	result := op.Exec(props)
 	<-result.Finished()
 
 	if !result.Success() {
@@ -139,8 +140,8 @@ func (wrapper *SimpleConfigWrapper) Set(key string, values ConfigScopedValues) e
 // Performe the List Operation
 func (wrapper *SimpleConfigWrapper) List(parent string) ([]string, error) {
 	var found bool
-	var op operation.Operation
-	var keyProp, keysProp operation.Property
+	var op api_operation.Operation
+	var keyProp, keysProp api_property.Property
 
 	list := []string{}
 
@@ -162,7 +163,7 @@ func (wrapper *SimpleConfigWrapper) List(parent string) ([]string, error) {
 		return list, errors.New("No keys property available in Config Wrapper")
 	}
 
-	result := op.Exec(&props)
+	result := op.Exec(props)
 	<-result.Finished()
 
 	if !result.Success() {

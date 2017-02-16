@@ -10,7 +10,7 @@ import (
  */
 
 // Constructor for SimpleSecurityWrapper
-func New_SimpleSecurityWrapper(operations *api_operation.Operations) *SimpleSecurityWrapper {
+func New_SimpleSecurityWrapper(operations api_operation.Operations) *SimpleSecurityWrapper {
 	return &SimpleSecurityWrapper{
 		operations: operations,
 	}
@@ -18,7 +18,7 @@ func New_SimpleSecurityWrapper(operations *api_operation.Operations) *SimpleSecu
 
 // Simple blocking security wrapper
 type SimpleSecurityWrapper struct {
-	operations *api_operation.Operations
+	operations api_operation.Operations
 }
 
 // Convert this into a SecurityWrapper
@@ -38,7 +38,7 @@ func (simple *SimpleSecurityWrapper) AuthorizeOperation(operation api_operation.
 	opProp, _ := props.Get(SECURITY_AUTHORIZATION_OPERATION_PROPERTY_KEY)
 	opProp.Set(operation)
 
-	result := authOp.Exec(&props)
+	result := authOp.Exec(props)
 	<-result.Finished()
 
 	if result.Success() {
@@ -58,7 +58,7 @@ func (simple *SimpleSecurityWrapper) CurrentUser() SecurityUser {
 	}
 
 	props := authOp.Properties()
-	result := authOp.Exec(&props)
+	result := authOp.Exec(props)
 
 	if result.Success() {
 		opProp, _ := props.Get(SECURITY_USER_PROPERTY_KEY)

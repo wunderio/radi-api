@@ -1,5 +1,10 @@
 package command
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 /**
  * An operation for listing commands that are available
  * in the app
@@ -27,7 +32,12 @@ func (list *BaseCommandListOperation) Description() string {
 	return "List all available commands."
 }
 
+// Man page for the operation
+func (list *BaseCommandListOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (list *BaseCommandListOperation) Internal() bool {
-	return true
+func (list *BaseCommandListOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_Internal()
 }

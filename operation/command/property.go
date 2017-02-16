@@ -3,7 +3,8 @@ package command
 import (
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
+	api_usage "github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -32,7 +33,12 @@ const (
 
 // Command for a single command key
 type CommandKeyProperty struct {
-	operation.StringProperty
+	api_property.StringProperty
+}
+
+// Id for the Property
+func (confKey *CommandKeyProperty) Property() api_property.Property {
+	return api_property.Property(confKey)
 }
 
 // Id for the Property
@@ -51,13 +57,18 @@ func (confKey *CommandKeyProperty) Description() string {
 }
 
 // Is the Property internal only
-func (confKey *CommandKeyProperty) Internal() bool {
-	return false
+func (confKey *CommandKeyProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Required()
 }
 
 // Command for a single command object
 type CommandCommandProperty struct {
 	command Command
+}
+
+// Id for the Property
+func (com *CommandCommandProperty) Property() api_property.Property {
+	return api_property.Property(com)
 }
 
 // Id for the Property
@@ -76,8 +87,8 @@ func (com *CommandCommandProperty) Description() string {
 }
 
 // Is the Property internal only
-func (com *CommandCommandProperty) Internal() bool {
-	return true
+func (com *CommandCommandProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // Give an idea of what type of value the property consumes
@@ -103,7 +114,12 @@ func (com *CommandCommandProperty) Set(value interface{}) bool {
 
 // Command for an ordered list of command keys
 type CommandKeysProperty struct {
-	operation.StringSliceProperty
+	api_property.StringSliceProperty
+}
+
+// Id for the Property
+func (confKey *CommandKeysProperty) Property() api_property.Property {
+	return api_property.Property(confKey)
 }
 
 // Id for the Property
@@ -122,13 +138,18 @@ func (keyValue *CommandKeysProperty) Description() string {
 }
 
 // Is the Property internal only
-func (keyValue *CommandKeysProperty) Internal() bool {
-	return false
+func (keyValue *CommandKeysProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
 }
 
 // Command for an ordered list of command keys
 type CommandFlagsProperty struct {
-	operation.StringSliceProperty
+	api_property.StringSliceProperty
+}
+
+// Id for the Property
+func (keyValue *CommandFlagsProperty) Property() api_property.Property {
+	return api_property.Property(keyValue)
 }
 
 // Id for the Property
@@ -147,13 +168,18 @@ func (keyValue *CommandFlagsProperty) Description() string {
 }
 
 // Is the Property internal only
-func (keyValue *CommandFlagsProperty) Internal() bool {
-	return false
+func (keyValue *CommandFlagsProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
 }
 
 // A command Property for command output
 type CommandOutputProperty struct {
-	operation.WriterProperty
+	api_property.WriterProperty
+}
+
+// Id for the Property
+func (keyValue *CommandOutputProperty) Property() api_property.Property {
+	return api_property.Property(keyValue)
 }
 
 // Id for the Property
@@ -172,13 +198,18 @@ func (keyValue *CommandOutputProperty) Description() string {
 }
 
 // Is the Property internal only
-func (keyValue *CommandOutputProperty) Internal() bool {
-	return false
+func (keyValue *CommandOutputProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
 }
 
 // A command Property for command error output
 type CommandErrorProperty struct {
-	operation.WriterProperty
+	api_property.WriterProperty
+}
+
+// Id for the Property
+func (keyValue *CommandErrorProperty) Property() api_property.Property {
+	return api_property.Property(keyValue)
 }
 
 // Id for the Property
@@ -197,13 +228,18 @@ func (keyValue *CommandErrorProperty) Description() string {
 }
 
 // Is the Property internal only
-func (keyValue *CommandErrorProperty) Internal() bool {
-	return false
+func (keyValue *CommandErrorProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
 }
 
 // A command Property for command execution input
 type CommandInputProperty struct {
-	operation.ReaderProperty
+	api_property.ReaderProperty
+}
+
+// Id for the Property
+func (keyValue *CommandInputProperty) Property() api_property.Property {
+	return api_property.Property(keyValue)
 }
 
 // Id for the Property
@@ -222,13 +258,18 @@ func (keyValue *CommandInputProperty) Description() string {
 }
 
 // Is the Property internal only
-func (keyValue *CommandInputProperty) Internal() bool {
-	return false
+func (keyValue *CommandInputProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
 }
 
 // A command Property for command execution net context
 type CommandContextProperty struct {
-	operation.ContextProperty
+	api_property.ContextProperty
+}
+
+// Id for the Property
+func (contextConf *CommandContextProperty) Property() api_property.Property {
+	return api_property.Property(contextConf)
 }
 
 // Id for the Property
@@ -247,6 +288,6 @@ func (contextConf *CommandContextProperty) Description() string {
 }
 
 // Is the Property internal only
-func (contextConf *CommandContextProperty) Internal() bool {
-	return false
+func (contextConf *CommandContextProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
 }

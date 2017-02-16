@@ -2,6 +2,9 @@ package security
 
 import (
 	"os/user"
+
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -88,7 +91,12 @@ func (authenticate *BaseSecurityUserOperation) Description() string {
 	return "Retrieve information about the current app user."
 }
 
+// Man page for the operation
+func (authenticate *BaseSecurityUserOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (authenticate *BaseSecurityUserOperation) Internal() bool {
-	return true
+func (authenticate *BaseSecurityUserOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }

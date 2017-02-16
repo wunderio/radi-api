@@ -1,5 +1,10 @@
 package orchestrate
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 /**
  * Orchestration START - like docker-compose start
  *
@@ -28,7 +33,12 @@ func (start *BaseOrchestrationStartOperation) Description() string {
 	return "This operation will start all containers, volumes and networks related to an application."
 }
 
+// Man page for the operation
+func (start *BaseOrchestrationStartOperation) Help() string {
+	return ""
+}
+
 // Is this an internal API operation
-func (start *BaseOrchestrationStartOperation) Internal() bool {
-	return false
+func (start *BaseOrchestrationStartOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }

@@ -1,7 +1,8 @@
 package project
 
 import (
-	"github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
+	api_usage "github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -17,7 +18,7 @@ const (
 
 // Property for the create source
 type ProjectCreateSourceProperty struct {
-	operation.StringProperty
+	api_property.StringProperty
 }
 
 // Id for the Property
@@ -36,13 +37,13 @@ func (createSource *ProjectCreateSourceProperty) Description() string {
 }
 
 // Is the Property internal only
-func (createSource *ProjectCreateSourceProperty) Internal() bool {
-	return false
+func (createSource *ProjectCreateSourceProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Required()
 }
 
 // Property for the create source
 type ProjectInitDemoModeProperty struct {
-	operation.BooleanProperty
+	api_property.BooleanProperty
 }
 
 // Id for the Property
@@ -61,6 +62,6 @@ func (initDemo *ProjectInitDemoModeProperty) Description() string {
 }
 
 // Is the Property internal only
-func (initDemo *ProjectInitDemoModeProperty) Internal() bool {
-	return false
+func (initDemo *ProjectInitDemoModeProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
 }

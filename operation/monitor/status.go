@@ -1,5 +1,10 @@
 package monitor
 
+import (
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_usage "github.com/wunderkraut/radi-api/usage"
+)
+
 const (
 	OPERATION_ID_MONITOR_STATUS = "monitor.status"
 )
@@ -29,7 +34,12 @@ func (status *BaseMonitorStatusOperation) Description() string {
 	return "App status information."
 }
 
+// Man page for the operation
+func (status *BaseMonitorStatusOperation) Help() string {
+	return "App status information."
+}
+
 // Is this an internal API operation
-func (status *BaseMonitorStatusOperation) Internal() bool {
-	return false
+func (status *BaseMonitorStatusOperation) Usage() api_usage.Usage {
+	return api_operation.Usage_External()
 }
