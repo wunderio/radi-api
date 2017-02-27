@@ -14,9 +14,7 @@ import (
  */
 
 const (
-	OPERATION_ID_MONITOR_LOG                    = "monitor.log"
-	OPERATION_PROPERTY_CONF_MONITOR_LOG_TYPE    = "monitor.log.type"
-	OPERATION_PROPERTY_CONF_MONITOR_LOG_MESSAGE = "monitor.log.message"
+	OPERATION_ID_MONITOR_LOG = "monitor.log"
 )
 
 // Base class for monitor log Operation
@@ -102,8 +100,8 @@ func (logger *MonitorStandardLogOperation) Exec(props api_property.Properties) a
 	res := api_result.New_StandardResult()
 
 	// we ignore the conf tests, as we ensured that the conf would exist in the property() method
-	logTypeProp, _ := props.Get(OPERATION_PROPERTY_CONF_MONITOR_LOG_TYPE)
-	messageProp, _ := props.Get(OPERATION_PROPERTY_CONF_MONITOR_LOG_MESSAGE)
+	logTypeProp, _ := props.Get(OPERATION_PROPERTY_ID_MONITOR_LOG_TYPE)
+	messageProp, _ := props.Get(OPERATION_PROPERTY_ID_MONITOR_LOG_MESSAGE)
 
 	var logType, message string
 	var ok bool
@@ -130,71 +128,4 @@ func (logger *MonitorStandardLogOperation) Exec(props api_property.Properties) a
 	res.MarkFinished()
 
 	return res.Result()
-}
-
-// property for a monitoring log status : error|info
-type MonitorLogTypeProperty struct {
-	api_property.StringProperty
-}
-
-// Constructor for MonitorLogTypeProperty
-func NewMonitorLogTypeProperty(logType string) *MonitorLogTypeProperty {
-	conf := MonitorLogTypeProperty{}
-	conf.Set(logType)
-	return &conf
-}
-
-// Id for the property
-func (logType *MonitorLogTypeProperty) Property() api_property.Property {
-	return api_property.Property(logType)
-}
-
-// Id for the property
-func (logType *MonitorLogTypeProperty) Id() string {
-	return OPERATION_PROPERTY_CONF_MONITOR_LOG_TYPE
-}
-
-// Label for the property
-func (logType *MonitorLogTypeProperty) Label() string {
-	return "Message type."
-}
-
-// Description for the property
-func (logType *MonitorLogTypeProperty) Description() string {
-	return "Message type, which can be either info or error."
-}
-
-// Man page for the property
-func (logType *MonitorLogTypeProperty) Help() string {
-	return ""
-}
-
-// Is the Property internal only
-func (logType *MonitorLogTypeProperty) Usage() api_usage.Usage {
-	return api_property.Usage_Required()
-}
-
-// property for a monitoring log message
-type MonitorLogMessageProperty struct {
-	api_property.StringProperty
-}
-
-// Id for the property
-func (message *MonitorLogMessageProperty) Id() string {
-	return OPERATION_PROPERTY_CONF_MONITOR_LOG_MESSAGE
-}
-
-// Label for the property
-func (message *MonitorLogMessageProperty) Label() string {
-	return "Message to be logged."
-}
-
-// Description for the property
-func (message *MonitorLogMessageProperty) Description() string {
-	return "Message which will be sent to the standard logger."
-}
-
-// Is the Property internal only
-func (message *MonitorLogMessageProperty) Usage() api_usage.Usage {
-	return api_property.Usage_Required()
 }

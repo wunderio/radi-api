@@ -17,22 +17,20 @@ type WriterProperty struct {
 }
 
 // Give an idea of what type of value the property consumes
-func (property *WriterProperty) Type() string {
+func (prop *WriterProperty) Type() string {
 	return "io.Writer"
 }
 
-func (property *WriterProperty) Get() interface{} {
-	if property.value == nil {
-		// writer := log.StandardLogger().Writer()
-		// defer writer.Close()
-		// property.value = io.Writer(writer)
-		property.value = io.Writer(os.Stdout)
+// Property accessors
+func (prop *WriterProperty) Get() interface{} {
+	if prop.value == nil {
+		prop.value = io.Writer(os.Stdout)
 	}
-	return interface{}(property.value)
+	return interface{}(prop.value)
 }
-func (property *WriterProperty) Set(value interface{}) bool {
+func (prop *WriterProperty) Set(value interface{}) bool {
 	if converted, ok := value.(io.Writer); ok {
-		property.value = converted
+		prop.value = converted
 		return true
 	} else {
 		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected io.Writer")
@@ -46,19 +44,20 @@ type ReaderProperty struct {
 }
 
 // Give an idea of what type of value the property consumes
-func (property *ReaderProperty) Type() string {
+func (prop *ReaderProperty) Type() string {
 	return "io.Reader"
 }
 
-func (property *ReaderProperty) Get() interface{} {
-	if property.value == nil {
-		property.value = io.Reader(os.Stdin)
+// Property accessors
+func (prop *ReaderProperty) Get() interface{} {
+	if prop.value == nil {
+		prop.value = io.Reader(os.Stdin)
 	}
-	return interface{}(property.value)
+	return interface{}(prop.value)
 }
-func (property *ReaderProperty) Set(value interface{}) bool {
+func (prop *ReaderProperty) Set(value interface{}) bool {
 	if converted, ok := value.(io.Reader); ok {
-		property.value = converted
+		prop.value = converted
 		return true
 	} else {
 		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected io.Reader")

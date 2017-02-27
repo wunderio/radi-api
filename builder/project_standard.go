@@ -46,7 +46,7 @@ func (project *StandardProject) ActivateBuilder(id string, implementations Imple
 		return builder.Activate(implementations, settings)
 	} else {
 		res := result.New_StandardResult()
-		res.AddError(errors.New("Builder not found"))
+		res.AddError(errors.New("Builder not found, could not be activated: " + id))
 		res.MarkFailed()
 		res.MarkFinished()
 		return res.Result()

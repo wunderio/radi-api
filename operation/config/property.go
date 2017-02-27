@@ -33,23 +33,30 @@ type ConfigKeyProperty struct {
 }
 
 // Id for the property
-func (confKey *ConfigKeyProperty) Id() string {
+func (key *ConfigKeyProperty) Id() string {
 	return OPERATION_PROPERTY_CONFIG_KEY
 }
 
 // Label for the property
-func (confKey *ConfigKeyProperty) Label() string {
+func (key *ConfigKeyProperty) Label() string {
 	return "property key."
 }
 
 // Description for the property
-func (confKey *ConfigKeyProperty) Description() string {
+func (key *ConfigKeyProperty) Description() string {
 	return "property key."
 }
 
 // Is the Property internal only
-func (confKey *ConfigKeyProperty) Usage() api_usage.Usage {
+func (key *ConfigKeyProperty) Usage() api_usage.Usage {
 	return api_property.Usage_Required()
+}
+
+// Copy the property
+func (key *ConfigKeyProperty) Copy() api_property.Property {
+	prop := &ConfigKeyProperty{}
+	prop.Set(key.Get())
+	return api_property.Property(prop)
 }
 
 // property for an ordered list of config keys
@@ -58,23 +65,30 @@ type ConfigKeysProperty struct {
 }
 
 // Id for the property
-func (keyValue *ConfigKeysProperty) Id() string {
+func (keys *ConfigKeysProperty) Id() string {
 	return OPERATION_PROPERTY_CONFIG_KEYS
 }
 
 // Label for the property
-func (keyValue *ConfigKeysProperty) Label() string {
+func (keys *ConfigKeysProperty) Label() string {
 	return "Configuration key list."
 }
 
 // Description for the property
-func (keyValue *ConfigKeysProperty) Description() string {
+func (keys *ConfigKeysProperty) Description() string {
 	return "List of configuration keys."
 }
 
 // Is the Property internal only
-func (keyValue *ConfigKeysProperty) Usage() api_usage.Usage {
+func (keys *ConfigKeysProperty) Usage() api_usage.Usage {
 	return api_property.Usage_ReadOnly()
+}
+
+// Copy the property
+func (keys *ConfigKeysProperty) Copy() api_property.Property {
+	prop := &ConfigKeysProperty{}
+	prop.Set(keys.Get())
+	return api_property.Property(prop)
 }
 
 // property for a single config value
@@ -83,23 +97,30 @@ type ConfigValueProperty struct {
 }
 
 // Id for the property
-func (property *ConfigValueProperty) Id() string {
+func (val *ConfigValueProperty) Id() string {
 	return OPERATION_PROPERTY_CONFIG_VALUE
 }
 
 // Label for the property
-func (property *ConfigValueProperty) Label() string {
+func (val *ConfigValueProperty) Label() string {
 	return "Configuration content"
 }
 
 // Description for the property
-func (property *ConfigValueProperty) Description() string {
+func (val *ConfigValueProperty) Description() string {
 	return "Content of the configuration"
 }
 
 // Is the Property internal only
-func (property *ConfigValueProperty) Usage() api_usage.Usage {
+func (val *ConfigValueProperty) Usage() api_usage.Usage {
 	return api_property.Usage_Internal()
+}
+
+// Copy the property
+func (val *ConfigValueProperty) Copy() api_property.Property {
+	prop := &ConfigValueProperty{}
+	prop.Set(val.Get())
+	return api_property.Property(prop)
 }
 
 // property for a value as a set of io.Readers
@@ -108,44 +129,51 @@ type ConfigValueScopedReadersProperty struct {
 }
 
 // Id for the property
-func (property *ConfigValueScopedReadersProperty) Id() string {
+func (scopedReaders *ConfigValueScopedReadersProperty) Id() string {
 	return OPERATION_PROPERTY_CONFIG_VALUE_READERS
 }
 
 // Label for the property
-func (property *ConfigValueScopedReadersProperty) Label() string {
+func (scopedReaders *ConfigValueScopedReadersProperty) Label() string {
 	return "Config value readers."
 }
 
 // Description for the property
-func (property *ConfigValueScopedReadersProperty) Description() string {
+func (scopedReaders *ConfigValueScopedReadersProperty) Description() string {
 	return "Config value in the form of an ScopeReaders, which is an ordered map of io.Readers."
 }
 
 // Is the Property internal only
-func (property *ConfigValueScopedReadersProperty) Usage() api_usage.Usage {
+func (scopedReaders *ConfigValueScopedReadersProperty) Usage() api_usage.Usage {
 	return api_property.Usage_ReadOnly()
 }
 
 // Give an idea of what type of value the property consumes
-func (property *ConfigValueScopedReadersProperty) Type() string {
+func (scopedReaders *ConfigValueScopedReadersProperty) Type() string {
 	return "operation/config.ScopeReaders"
 }
 
 // Retreive the property value
-func (property *ConfigValueScopedReadersProperty) Get() interface{} {
-	return interface{}(property.value)
+func (scopedReaders *ConfigValueScopedReadersProperty) Get() interface{} {
+	return interface{}(scopedReaders.value)
 }
 
 // Assign the property value
-func (property *ConfigValueScopedReadersProperty) Set(value interface{}) bool {
+func (scopedReaders *ConfigValueScopedReadersProperty) Set(value interface{}) bool {
 	if converted, ok := value.(ScopedReaders); ok {
-		property.value = converted
+		scopedReaders.value = converted
 		return true
 	} else {
 		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected ScopedReaders")
 		return false
 	}
+}
+
+// Copy the property
+func (scopedReaders *ConfigValueScopedReadersProperty) Copy() api_property.Property {
+	prop := &ConfigValueScopedReadersProperty{}
+	prop.Set(scopedReaders.Get())
+	return api_property.Property(prop)
 }
 
 // property for a single value as an io.Writer
@@ -154,42 +182,49 @@ type ConfigValueScopedWritersProperty struct {
 }
 
 // Id for the property
-func (property *ConfigValueScopedWritersProperty) Id() string {
+func (scopedWriters *ConfigValueScopedWritersProperty) Id() string {
 	return OPERATION_PROPERTY_CONFIG_VALUE_WRITERS
 }
 
 // Label for the property
-func (property *ConfigValueScopedWritersProperty) Label() string {
+func (scopedWriters *ConfigValueScopedWritersProperty) Label() string {
 	return "Config value writers."
 }
 
 // Description for the property
-func (property *ConfigValueScopedWritersProperty) Description() string {
+func (scopedWriters *ConfigValueScopedWritersProperty) Description() string {
 	return "Config value in the form of an io.Writer."
 }
 
 // Is the Property internal only
-func (property *ConfigValueScopedWritersProperty) Usage() api_usage.Usage {
+func (scopedWriters *ConfigValueScopedWritersProperty) Usage() api_usage.Usage {
 	return api_property.Usage_ReadOnly()
 }
 
 // Give an idea of what type of value the property consumes
-func (property *ConfigValueScopedWritersProperty) Type() string {
+func (scopedWriters *ConfigValueScopedWritersProperty) Type() string {
 	return "operation/config.ScopeWriters"
 }
 
 // Retreive the property value
-func (property *ConfigValueScopedWritersProperty) Get() interface{} {
-	return interface{}(property.value)
+func (scopedWriters *ConfigValueScopedWritersProperty) Get() interface{} {
+	return interface{}(scopedWriters.value)
 }
 
 // Assign the property value
-func (property *ConfigValueScopedWritersProperty) Set(value interface{}) bool {
+func (scopedWriters *ConfigValueScopedWritersProperty) Set(value interface{}) bool {
 	if converted, ok := value.(ScopedWriters); ok {
-		property.value = converted
+		scopedWriters.value = converted
 		return true
 	} else {
 		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected ScopedWriters")
 		return false
 	}
+}
+
+// Copy the property
+func (scopedWriters *ConfigValueScopedWritersProperty) Copy() api_property.Property {
+	prop := &ConfigValueScopedWritersProperty{}
+	prop.Set(scopedWriters.Get())
+	return api_property.Property(prop)
 }

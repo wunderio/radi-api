@@ -60,3 +60,8 @@ func (usageDecProp *UsageDecoratedProperty) Get() interface{} {
 func (usageDecProp *UsageDecoratedProperty) Set(value interface{}) bool {
 	return usageDecProp.decorated.Set(value)
 }
+
+// Copy the property
+func (usageDecProp *UsageDecoratedProperty) Copy() Property {
+	return New_UsageDecoratedProperty(usageDecProp.decorated.Copy(), usageDecProp.usage)
+}

@@ -3,8 +3,8 @@ package setting
 import (
 	"errors"
 
-	"github.com/wunderkraut/radi-api/operation"
-	"github.com/wunderkraut/radi-api/property"
+	api_operation "github.com/wunderkraut/radi-api/operation"
+	api_property "github.com/wunderkraut/radi-api/property"
 )
 
 /**
@@ -13,23 +13,23 @@ import (
  * using the settings operations as a single struct.
  */
 
+// A simple, blocking, Settings operations wrapper
+type SimpleSettingWrapper struct {
+	operations api_operation.Operations
+}
+
 // Constructor for SimpleSettingWrapper
-func New_SimpleSettingWrapper(operations operation.Operations) *SimpleSettingWrapper {
+func New_SimpleSettingWrapper(operations api_operation.Operations) *SimpleSettingWrapper {
 	return &SimpleSettingWrapper{
 		operations: operations,
 	}
 }
 
-// A simple, blocking, Settings operations wrapper
-type SimpleSettingWrapper struct {
-	operations operation.Operations
-}
-
 // Set a setting through the wrapped operations
 func (wrapper *SimpleSettingWrapper) Get(key string) (string, error) {
 	var found bool
-	var getOp operation.Operation
-	var keyProp, valueProp property.Property
+	var getOp api_operation.Operation
+	var keyProp, valueProp api_property.Property
 
 	value := ""
 
@@ -68,8 +68,8 @@ func (wrapper *SimpleSettingWrapper) Get(key string) (string, error) {
 // Retrieve a setting through the wrapped operations
 func (wrapper *SimpleSettingWrapper) Set(key, value string) error {
 	var found bool
-	var setOp operation.Operation
-	var keyProp, valueProp property.Property
+	var setOp api_operation.Operation
+	var keyProp, valueProp api_property.Property
 
 	if setOp, found = wrapper.operations.Get(OPERATION_ID_SETTING_SET); !found {
 		return errors.New("No set operation available in Setting Wrapper")
@@ -110,8 +110,8 @@ func (wrapper *SimpleSettingWrapper) Set(key, value string) error {
 // List settins through the wrapped opertions
 func (wrapper *SimpleSettingWrapper) List(parent string) ([]string, error) {
 	var found bool
-	var listOp operation.Operation
-	var keyProp, keysProp property.Property
+	var listOp api_operation.Operation
+	var keyProp, keysProp api_property.Property
 
 	list := []string{}
 

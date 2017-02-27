@@ -48,4 +48,7 @@ type Property interface {
 	// Value allows the retrieval and setting of unknown Typed values for the property.
 	Get() interface{}
 	Set(interface{}) bool
+
+	// Make a copy/clone of the property
+	Copy() Property
 }

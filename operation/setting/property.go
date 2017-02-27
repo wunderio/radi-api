@@ -1,8 +1,8 @@
 package setting
 
 import (
-	"github.com/wunderkraut/radi-api/property"
-	"github.com/wunderkraut/radi-api/usage"
+	api_property "github.com/wunderkraut/radi-api/property"
+	api_usage "github.com/wunderkraut/radi-api/usage"
 )
 
 /**
@@ -23,7 +23,7 @@ const (
 
 // Property for a single setting key
 type SettingKeyProperty struct {
-	property.StringProperty
+	api_property.StringProperty
 }
 
 // Id for the Property
@@ -42,13 +42,20 @@ func (key *SettingKeyProperty) Description() string {
 }
 
 // Is the Property internal only
-func (key *SettingKeyProperty) Usage() usage.Usage {
-	return property.Usage_Required()
+func (key *SettingKeyProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Required()
+}
+
+// Is the Property internal only
+func (key *SettingKeyProperty) Copy() api_property.Property {
+	prop := &SettingKeyProperty{}
+	prop.Set(key.Get())
+	return api_property.Property(prop)
 }
 
 // Property for a single setting scope
 type SettingScopeProperty struct {
-	property.StringProperty
+	api_property.StringProperty
 }
 
 // Id for the Property
@@ -67,13 +74,20 @@ func (scope *SettingScopeProperty) Description() string {
 }
 
 // Is the Property internal only
-func (scope *SettingScopeProperty) Usage() usage.Usage {
-	return property.Usage_Optional()
+func (scope *SettingScopeProperty) Usage() api_usage.Usage {
+	return api_property.Usage_Optional()
+}
+
+// Copy the property
+func (scope *SettingScopeProperty) Copy() api_property.Property {
+	prop := &SettingScopeProperty{}
+	prop.Set(scope.Get())
+	return api_property.Property(prop)
 }
 
 // Property for an ordered list of config keys
 type SettingKeysProperty struct {
-	property.StringSliceProperty
+	api_property.StringSliceProperty
 }
 
 // Id for the Property
@@ -92,13 +106,20 @@ func (keys *SettingKeysProperty) Description() string {
 }
 
 // Is the Property internal only
-func (keys *SettingKeysProperty) Usage() usage.Usage {
-	return property.Usage_ReadOnly()
+func (keys *SettingKeysProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
+}
+
+// Copy the property
+func (keys *SettingKeysProperty) Copy() api_property.Property {
+	prop := &SettingKeysProperty{}
+	prop.Set(keys.Get())
+	return api_property.Property(prop)
 }
 
 // Property for a single config value
 type SettingValueProperty struct {
-	property.BytesArrayProperty
+	api_property.BytesArrayProperty
 }
 
 // Id for the Property
@@ -117,6 +138,13 @@ func (settingValue *SettingValueProperty) Description() string {
 }
 
 // Is the Property internal only
-func (settingValue *SettingValueProperty) Usage() usage.Usage {
-	return property.Usage_ReadOnly()
+func (settingValue *SettingValueProperty) Usage() api_usage.Usage {
+	return api_property.Usage_ReadOnly()
+}
+
+// Copy the property
+func (settingValue *SettingValueProperty) Copy() api_property.Property {
+	prop := &SettingValueProperty{}
+	prop.Set(settingValue.Get())
+	return api_property.Property(prop)
 }

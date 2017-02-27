@@ -14,12 +14,10 @@ func (property *IntProperty) Type() string {
 	return "int"
 }
 
-// Get the property value
+// Property accessors
 func (property *IntProperty) Get() interface{} {
 	return interface{}(property.value)
 }
-
-// Set the property value
 func (property *IntProperty) Set(value interface{}) bool {
 	if converted, ok := value.(int); ok {
 		property.value = converted

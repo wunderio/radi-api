@@ -9,16 +9,16 @@ import (
  * wrapper.
  */
 
+// Simple blocking security wrapper
+type SimpleSecurityWrapper struct {
+	operations api_operation.Operations
+}
+
 // Constructor for SimpleSecurityWrapper
 func New_SimpleSecurityWrapper(operations api_operation.Operations) *SimpleSecurityWrapper {
 	return &SimpleSecurityWrapper{
 		operations: operations,
 	}
-}
-
-// Simple blocking security wrapper
-type SimpleSecurityWrapper struct {
-	operations api_operation.Operations
 }
 
 // Convert this into a SecurityWrapper

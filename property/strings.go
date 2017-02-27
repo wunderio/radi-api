@@ -14,6 +14,7 @@ func (prop *StringProperty) Type() string {
 	return "string"
 }
 
+// Property accessors
 func (prop *StringProperty) Get() interface{} {
 	return interface{}(prop.value)
 }
@@ -37,6 +38,7 @@ func (prop *StringSliceProperty) Type() string {
 	return "[]string"
 }
 
+// Property accessors
 func (prop *StringSliceProperty) Get() interface{} {
 	return interface{}(prop.value)
 }
@@ -60,6 +62,7 @@ func (prop *BytesArrayProperty) Type() string {
 	return "[]byte"
 }
 
+// Property accessors
 func (prop *BytesArrayProperty) Get() interface{} {
 	return interface{}(prop.value)
 }

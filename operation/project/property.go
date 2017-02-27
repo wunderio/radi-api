@@ -41,6 +41,13 @@ func (createSource *ProjectCreateSourceProperty) Usage() api_usage.Usage {
 	return api_property.Usage_Required()
 }
 
+// Is the Property internal only
+func (createSource *ProjectCreateSourceProperty) Copy() api_property.Property {
+	prop := &ProjectCreateSourceProperty{}
+	prop.Set(createSource.Get())
+	return api_property.Property(prop)
+}
+
 // Property for the create source
 type ProjectInitDemoModeProperty struct {
 	api_property.BooleanProperty
@@ -64,4 +71,11 @@ func (initDemo *ProjectInitDemoModeProperty) Description() string {
 // Is the Property internal only
 func (initDemo *ProjectInitDemoModeProperty) Usage() api_usage.Usage {
 	return api_property.Usage_Optional()
+}
+
+// Is the Property internal only
+func (initDemo *ProjectInitDemoModeProperty) Copy() api_property.Property {
+	prop := &ProjectInitDemoModeProperty{}
+	prop.Set(initDemo.Get())
+	return api_property.Property(prop)
 }
