@@ -1,8 +1,8 @@
 package result
 
-import (
-	"github.com/wunderkraut/radi-api/property"
-)
+// import (
+// 	"github.com/wunderkraut/radi-api/property"
+// )
 
 // Make a successfully finished result with no message and no properties
 func MakeSuccessfulResult() Result {
@@ -14,18 +14,18 @@ func MakeSuccessfulResult() Result {
 
 // StandardResult is a base class for results which keep success boolean and errors slice as variables
 type StandardResult struct {
-	finished   chan bool
-	success    bool
-	errors     []error
+	finished chan bool
+	success  bool
+	errors   []error
 	// properties property.Properties
 }
 
 // Constructor for StandardResult
 func New_StandardResult() *StandardResult {
 	return &StandardResult{
-		finished:   make(chan bool),
-		success:    true, // results default to success, to prevent silly issues.
-		errors:     []error{},
+		finished: make(chan bool),
+		success:  true, // results default to success, to prevent silly issues.
+		errors:   []error{},
 		// properties: property.New_SimplePropertiesEmpty().Properties(),
 	}
 }

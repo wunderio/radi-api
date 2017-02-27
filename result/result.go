@@ -1,8 +1,8 @@
 package result
 
-import (
-	"github.com/wunderkraut/radi-api/property"
-)
+// import (
+// 	"github.com/wunderkraut/radi-api/property"
+// )
 
 /**
  * This file holds the definition of Result, which is what an operation
