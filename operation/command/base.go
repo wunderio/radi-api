@@ -15,8 +15,8 @@ type BaseCommandKeyCommandOperation struct{}
 func (base *BaseCommandKeyCommandOperation) Properties() api_property.Properties {
 	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add((&CommandKeyProperty{}).Property())
-	props.Add((&CommandCommandProperty{}).Property())
+	props.Add(api_property.Property(&CommandKeyProperty{}))
+	props.Add(api_property.Property(&CommandCommandProperty{}))
 
 	return props.Properties()
 }
@@ -28,8 +28,8 @@ type BaseCommandKeyKeysOperation struct{}
 func (base *BaseCommandKeyKeysOperation) Properties() api_property.Properties {
 	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add((&CommandKeyProperty{}).Property())
-	props.Add((&CommandKeysProperty{}).Property())
+	props.Add(api_property.Property(&CommandKeyProperty{}))
+	props.Add(api_property.Property(&CommandKeysProperty{}))
 
 	return props.Properties()
 }
@@ -41,7 +41,7 @@ type BaseCommandContextOperation struct{}
 func (base *BaseCommandContextOperation) Properties() api_property.Properties {
 	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add((&CommandContextProperty{}).Property())
+	props.Add(api_property.Property(&CommandContextProperty{}))
 
 	return props.Properties()
 }
@@ -53,9 +53,9 @@ type BaseCommandInputOutputOperation struct{}
 func (base *BaseCommandInputOutputOperation) Properties() api_property.Properties {
 	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add((&CommandInputProperty{}).Property())
-	props.Add((&CommandOutputProperty{}).Property())
-	props.Add((&CommandErrorProperty{}).Property())
+	props.Add(api_property.Property(&CommandInputProperty{}))
+	props.Add(api_property.Property(&CommandOutputProperty{}))
+	props.Add(api_property.Property(&CommandErrorProperty{}))
 
 	return props.Properties()
 }
@@ -67,7 +67,7 @@ type BaseCommandFlagsOperation struct{}
 func (base *BaseCommandFlagsOperation) Properties() api_property.Properties {
 	props := api_property.New_SimplePropertiesEmpty()
 
-	props.Add((&CommandFlagsProperty{}).Property())
+	props.Add(api_property.Property(&CommandFlagsProperty{}))
 
 	return props.Properties()
 }

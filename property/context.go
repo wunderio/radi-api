@@ -16,21 +16,21 @@ type ContextProperty struct {
 }
 
 // Give an idea of what type of value the property consumes
-func (property *ContextProperty) Type() string {
+func (prop *ContextProperty) Type() string {
 	return "context.Context"
 }
 
-// Retrieve the context, or retrieve a Background context by default
-func (property *ContextProperty) Get() interface{} {
-	if property.value == nil {
-		property.value = context.Background()
+// Property accessors: Retrieve the context, or retrieve a Background context by default
+func (prop *ContextProperty) Get() interface{} {
+	if prop.value == nil {
+		prop.value = context.Background()
 	}
 
-	return interface{}(property.value)
+	return interface{}(prop.value)
 }
-func (property *ContextProperty) Set(value interface{}) bool {
+func (prop *ContextProperty) Set(value interface{}) bool {
 	if converted, ok := value.(context.Context); ok {
-		property.value = converted
+		prop.value = converted
 		return true
 	} else {
 		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected context/Context")

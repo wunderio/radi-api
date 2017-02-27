@@ -1,5 +1,9 @@
 package result
 
+import (
+	"github.com/wunderkraut/radi-api/property"
+)
+
 /**
  * This file holds the definition of Result, which is what an operation
  * returns, and a few usefull base structs that implement Result, which
@@ -16,4 +20,7 @@ type Result interface {
 
 	// return any errors that occured.
 	Errors() []error
+
+	// Return the Properties for the result
+	// Properties() property.Properties
 }

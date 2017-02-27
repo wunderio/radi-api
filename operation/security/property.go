@@ -45,6 +45,13 @@ func (authSuccessProp *SecurityAuthenticationSucceededProperty) Usage() api_usag
 	return api_property.Usage_ReadOnly()
 }
 
+// Copy the property
+func (authSuccessProp *SecurityAuthenticationSucceededProperty) Copy() api_property.Property {
+	prop := &SecurityAuthenticationSucceededProperty{}
+	prop.Set(authSuccessProp.Get())
+	return api_property.Property(prop)
+}
+
 // A boolean property for if an authorization succeeded (was granted)
 type SecurityAuthorizationSucceededProperty struct {
 	api_property.BooleanProperty
@@ -70,6 +77,13 @@ func (authSuccessProp *SecurityAuthorizationSucceededProperty) Usage() api_usage
 	return api_property.Usage_ReadOnly()
 }
 
+// Copy the property
+func (authSuccessProp *SecurityAuthorizationSucceededProperty) Copy() api_property.Property {
+	prop := &SecurityAuthorizationSucceededProperty{}
+	prop.Set(authSuccessProp.Get())
+	return api_property.Property(prop)
+}
+
 // An Operation property
 type SecurityAuthorizationOperationProperty struct {
 	api_operation.OperationProperty
@@ -93,6 +107,13 @@ func (operationProp *SecurityAuthorizationOperationProperty) Description() strin
 // Mark a property as being for internal use only (no shown to users)
 func (operationProp *SecurityAuthorizationOperationProperty) Usage() api_usage.Usage {
 	return api_property.Usage_Internal()
+}
+
+// Copy the property
+func (operationProp *SecurityAuthorizationOperationProperty) Copy() api_property.Property {
+	prop := &SecurityAuthorizationOperationProperty{}
+	prop.Set(operationProp.Get())
+	return api_property.Property(prop)
 }
 
 // An Operation property
@@ -139,6 +160,13 @@ func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Set(value interfa
 	}
 }
 
+// Copy the property
+func (ruleresultProp *SecurityAuthorizationRuleResultProperty) Copy() api_property.Property {
+	prop := &SecurityAuthorizationRuleResultProperty{}
+	prop.Set(ruleresultProp.Get())
+	return api_property.Property(prop)
+}
+
 // An Operation property
 type SecurityUserProperty struct {
 	value SecurityUser
@@ -181,4 +209,11 @@ func (userProp *SecurityUserProperty) Set(value interface{}) bool {
 		log.WithFields(log.Fields{"value": value}).Error("Could not assign Property value, because the passed parameter was the wrong type. Expected a SecurityUser")
 		return false
 	}
+}
+
+// Copy the property
+func (userProp *SecurityUserProperty) Copy() api_property.Property {
+	prop := &SecurityUserProperty{}
+	prop.Set(userProp.Get())
+	return api_property.Property(prop)
 }
